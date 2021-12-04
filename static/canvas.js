@@ -1,4 +1,6 @@
-var cant_hex = 0;
+        
+        
+
         var piezas = {};
         piezas["blancas"] = {};
         piezas["negras"] = {};
@@ -10,7 +12,7 @@ var cant_hex = 0;
 
             contexto.strokeStyle = "#212121";
             contexto.fillStyle = (jugador == "blancas")?"gray":"#ff8080";
-            cant_hex++;
+            
             contexto.beginPath();
             // Esquina superior izquierda
             contexto.moveTo(v1X, v1Y);
