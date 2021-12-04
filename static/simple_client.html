@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="simple_client.css"/>
     <!-- TODO: remove jquery (only used for debugging) -->
     <!-- script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script -->
+    <script src="clicksPiezas.js"></script>
     <script src="canvas.js"></script>
     <script src="simple_client.js" defer="defer"></script>
     
@@ -24,52 +25,28 @@
 
   <body onload="renderPage();">
     <noscript><h1>You need to enable JavaScript to run this app!!!</h1></noscript>
-   
-    <form id="jugar_form">
-      <label>Pieza a jugar</label>
-      <input type="text" id="pieza" size="10"/><br/>
-      <label>En contacto con</label>
-      <input type="text" id="pieza2" placeholder="pieza" size="10"/>
-      <input type="text" id="jugador" placeholder="jugador" size="10"/>
-      <br/>
-      <label>Cara</label>
-      
-      <input type="text" id="cara" size="10"/>
-      <br>
-      <input type="submit" value="Jugar"/>
-    </form>
-
     <div class="state">
       <div class="container-item">
         <div class="title-item">Turno:</div>
         <div class="item-state" id="turno"></div>
       </div>
-
+    <form id="jugar_form">
       <div class="container-item">
-        <div class="title-item">Piezas Blancas Jugadas:</div>
-        <div class="item-state" id="piezasBlancasJugadas"></div>
+        <div class="title-item">Selecciona una pieza:</div>
+        <select class="item-state" id="piezasSinJugar"></select>
       </div>
+      <input type="submit" value="Jugar"/>
+    </form>
 
-      <div class="container-item">
-        <div class="title-item">Piezas Blancas sin Jugar:</div>
-        <div class="item-state" id="piezasBlancasSinJugar"></div>
-      </div>
+  
 
-      <div class="container-item">
-        <div class="title-item">Piezas Negras Jugadas:</div>
-        <div class="item-state" id="piezasNegrasJugadas"></div>
-      </div>
-
-      <div class="container-item">
-        <div class="title-item">Piezas Negras sin Jugar:</div>
-        <div class="item-state" id="piezasNegrasSinJugar"></div>
-      </div>
+      
       <div class="container-item">
         <div class="item-state" id="true_orFalse"></div>
       </div>
     </div>
 
-    <canvas id="canvas" width="1500" height="1000"></canvas>
+    <canvas id="canvas" width="1500" height="1000" style="border: 1px solid black;"></canvas>
 
     <form id="query_form">
       <label>Query:</label><br/>

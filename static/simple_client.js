@@ -1,5 +1,5 @@
 'use strict';
-
+var piezaActual = "";
 // Simple client for running a query on the server and displaying the result
 
 // Called by <body onload="renderPage();">
@@ -7,7 +7,7 @@ async function renderPage() {
     document.getElementById('query_form').addEventListener('submit', handleSubmit);
     document.getElementById('jugar_form').addEventListener('submit', jugarSubmit);
     document.getElementById('result').style.display = 'none';
-
+    document.getElementById('canvas').addEventListener("click", clickBorde)
     updateState();
 }
 
@@ -43,20 +43,49 @@ async function pintarPieza(pieza, jugador2, pieza2, cara2)
     draw(pieza, jugador, jugador2, cara2, pieza2, coordenadas)
 }
 
+async function ponerPieza(jugador, pieza, cara)
+{
+    piezaActual = document.getElementById("piezasSinJugar").value;
+    let q = `agregarFicha(${piezaActual} , ${jugador} , ${pieza}, ${cara} ).`;
+    let result = 0;
+    await fetchFromServer('/json', {query: q},
+                          query_result => result = query_result)
+
+    if(result.success && result.success!="error")
+    {
+        pintarPieza(piezaActual, jugador, pieza, cara);
+        await updateState()
+    }
+    else
+    {
+        refrescarCanvas();
+    }
+    document.getElementById("true_orFalse").innerHTML = result.success;
+}
+
 async function jugarSubmit(event)
 {
     event.preventDefault();
-
-    let pieza = document.getElementById('pieza');
-    let pieza2 = document.getElementById('pieza2');
+    refrescarCanvas();
+    let select = document.getElementById('piezasSinJugar');
+    
+   /* let pieza2 = document.getElementById('pieza2');
     let jugador = document.getElementById("jugador");
-    let cara = document.getElementById("cara");
+    let cara = document.getElementById("cara");*/
     let q = "";
-
-    if(jugador.value && jugador.value != "")
-         q = `agregarFicha(${pieza.value} , ${jugador.value} , ${pieza2.value}, ${cara.value} ).`;
+    let cantPiezasJugadasBlancas = "";
+    await fetchFromServer('/json', {query: "cantPiezasJugadas(blancas,X)."},
+                          query_result => cantPiezasJugadasBlancas = query_result.vars[0].value)
+    if(cantPiezasJugadasBlancas !== "0")
+    {
+        piezaActual = select.value;
+       pintaTodosLosLugaresVacios();
+       
+    }
+         
     else
-        q = `agregarFicha(${pieza.value}).`;
+    {
+        q = `agregarFicha(${select.value}).`;
 
     let result = 0;
     await fetchFromServer('/json', {query: q},
@@ -64,11 +93,11 @@ async function jugarSubmit(event)
 
     if(result.success && result.success!="error")
     {
-        pintarPieza(pieza.value, jugador.value, pieza2.value, cara.value);
+        pintarPieza(select.value);
         await updateState()
     }
     document.getElementById("true_orFalse").innerHTML = result.success;
-    
+}
 }
 
 function separarArray(array)
@@ -97,11 +126,26 @@ async function piezasBlancasJugadas()
                           query_result => div.innerHTML = separarArray(query_result.vars[1].value));
 
 }
-async function piezasNegrasSinJugar()
+async function piezasSinJugar()
 {
     let div = document.getElementById("piezasNegrasSinJugar");
-    await fetchFromServer('/json', {query: "findall(X, piezasSinJugar(negras,X), P)."},
-                          query_result => div.innerHTML = separarArray(query_result.vars[1].value));
+    await turno();
+    let t = document.getElementById("turno").innerHTML;
+    let select = document.getElementById("piezasSinJugar");
+    select.innerHTML = "";
+    await fetchFromServer('/json', {query: `findall(X, piezasSinJugar(${t},X), P).`},
+                          query_result => 
+                          {
+                              let r= separarArray(query_result.vars[1].value)
+                              r.forEach(pieza=>
+                                {
+                                    let option = document.createElement("option");
+                                    option.innerHTML = pieza;
+                                    option.value = pieza;
+                                    select.appendChild(option)
+                                });
+                            
+                            });
 
 }
 async function piezasNegrasJugadas()
@@ -115,10 +159,7 @@ async function piezasNegrasJugadas()
 async function updateState()
 {
     await turno();
-    await piezasBlancasSinJugar();
-    await piezasBlancasJugadas();
-    await piezasNegrasSinJugar();
-    await piezasNegrasJugadas();
+    await piezasSinJugar()
     
 }
 
@@ -158,7 +199,6 @@ async function fetchFromServer(path, request, callback) {
 
 // Callback from fetchFromServer for handleSubmit
 function displayQueryResult(query_result) {
-    console.log(query_result)
     document.getElementById('result').style.display = 'block';
     document.getElementById('result:query').innerHTML = '<code>' + sanitizeText(query_result.query) + '</code>';
     document.getElementById('result:success').innerHTML = '<i>' + query_result.success.toString() + '</i>';

@@ -1,15 +1,9 @@
-        
-        function Pieza()
-        {
-          this.coordenadas = {};
-          this.conexiones = {};
-        }
 
-        var piezas = {};
-        piezas["blancas"] = {};
-        piezas["negras"] = {};
+        
+        
         function dibujaHex([v1X, v1Y], [v2X, v2Y], [v3X, v3Y], [v4X, v4Y], [v5X, v5Y], [v6X, v6Y], jugador, pieza, coordenadas)
         {
+
             let canvas = document.getElementById("canvas");
             let contexto = canvas.getContext("2d");
             contexto.lineWidth = 2;
@@ -42,21 +36,21 @@
             
             contexto.fillStyle = "red"
             contexto.fillText(pieza, v1X + 15, v1Y + 50)
-            contexto.fillText(coordenadas[1], v1X+20, v1Y + 10);
+            /*contexto.fillText(coordenadas[1], v1X+20, v1Y + 10);
             contexto.fillText(coordenadas[2], v2X, v2Y + 35);
             contexto.fillText(coordenadas[3], v3X-35, v3Y+25);
             contexto.fillText(coordenadas[4], v4X-35, v4Y - 5);
             contexto.fillText(coordenadas[5], v5X - 20, v5Y -35);
-            contexto.fillText(coordenadas[6], v6X+20, v6Y-20);
+            contexto.fillText(coordenadas[6], v6X+20, v6Y-20);*/
 
-            piezas[jugador][pieza] = new Pieza();
-            piezas[jugador][pieza].coordenadas[1] = [v1X, v1Y]
-            piezas[jugador][pieza].coordenadas[2] = [v2X, v2Y]
-            piezas[jugador][pieza].coordenadas[3] = [v3X, v3Y]
-            piezas[jugador][pieza].coordenadas[4] = [v4X, v4Y]
-            piezas[jugador][pieza].coordenadas[5] = [v5X, v5Y]
-            piezas[jugador][pieza].coordenadas[6] = [v6X, v6Y]
-            return piezas[jugador][pieza];
+            let p = new Pieza();
+            p.coordenadas[1] = [v1X, v1Y]
+            p.coordenadas[2] = [v2X, v2Y]
+            p.coordenadas[3] = [v3X, v3Y]
+            p.coordenadas[4] = [v4X, v4Y]
+            p.coordenadas[5] = [v5X, v5Y]
+            p.coordenadas[6] = [v6X, v6Y]
+            return p;
         }
 
     function getV1X(X, v)
@@ -84,8 +78,10 @@
 
       function draw(pieza, jugador, jugador2, cara2, pieza2, coordenadas){
           
+        refrescarCanvas();
           let v1X =0;
           let v1Y = 0;
+          let ml = 0;
           if(!pieza2)
             {
                 v1X = 400;
@@ -93,7 +89,7 @@
             }
             else{
                 cara2 = Number(cara2);
-                let ml = cara2 + 3;
+                ml = cara2 + 3;
                 if(ml > 6)
                   ml = ml%7+1;
 
@@ -102,8 +98,7 @@
                   cara2 = 1;
 
                 [X,Y] = piezas[jugador2][pieza2].coordenadas[cara2]
-                console.log(X, Y);
-                console.log(ml)
+                
                 v1X = getV1X(X, ml);
                 v1Y = getV1Y(Y, ml);
             }
@@ -112,6 +107,73 @@
           let v2X = v1X + 60;
           let v2Y = v1Y;
         let piezaDibujada = dibujaHex([v1X, v1Y], [v2X,v2Y], [v2X+30,50+v2Y], [v2X, v2Y+100], [v1X, v1Y+100], [v1X-30, v1Y+50], jugador, pieza, coordenadas)
-        piezaDibujada.conexiones[ml] = piezas[jugador2][pieza2];
-        piezas[jugador2][pieza2].conexiones[cara2] = piezaDibujada;
+
+        piezas[jugador][pieza] = piezaDibujada;
+        if(ml !== 0 )
+        {
+        
+        cara2--;
+        if(cara2 == 0)
+          cara2 = 6;
+        
+          //conectar(piezaDibujada, ml, piezas[jugador2][pieza2], cara2)
+        }
+      }
+
+      function conectar(pieza1, cara1, pieza2, cara2)
+      {
+        if(pieza1.conexiones[cara1])
+          return;
+
+        pieza1.conexiones[cara1] = pieza2;
+        pieza2.conexiones[cara2] = pieza1;
+        
+        let cara2_1 = cara2 + 1;
+        let cara2_2 = cara2 - 1;
+        let cara1_1 = cara1 - 1;
+        let cara1_2 = cara1 + 1;
+
+        if(cara1_1 < 1)
+          cara1_1 = 6;
+
+        if(cara1_2 > 6)
+          cara1_2 = 1;
+ 
+        if(cara2_1 > 6)
+          cara2_1 = 1;
+
+        if(cara2_2 < 1)
+          cara2_2 = 6;
+
+        if(pieza2.conexiones[cara2_1])
+          {
+            let nuevaCara2 = cara1_1 + 3;
+                if(nuevaCara2 > 6)
+                  nuevaCara2 = nuevaCara2%7+1;
+
+            return conectar(pieza1, cara1_1, pieza2.conexiones[cara2_1], nuevaCara2)
+          }
+          if(pieza2.conexiones[cara2_2])
+          {
+            let nuevaCara2 = cara1_2 + 3;
+                if(nuevaCara2 > 6)
+                  nuevaCara2 = nuevaCara2%7+1;
+
+            return conectar(pieza1, cara1_2, pieza2.conexiones[cara2_2], nuevaCara2)
+          }
+      }
+
+      function refrescarCanvas()
+      {
+        bordes["blancas"] = {};
+        bordes["negras"] = {};
+        let canvas = document.getElementById("canvas");
+        canvas.width = canvas.width;
+        ["blancas", "negras"].forEach(jugador => {
+          Object.keys(piezas[jugador]).forEach(pieza=>
+            {
+              let v = piezas[jugador][pieza].coordenadas;
+              dibujaHex([v[1][0], v[1][1]], [v[2][0], v[2][1]], [v[3][0], v[3][1]], [v[4][0], v[4][1]], [v[5][0], v[5][1]], [v[6][0], v[6][1]], jugador, pieza)
+            });
+        });
       }
