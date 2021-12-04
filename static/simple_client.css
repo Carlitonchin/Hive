@@ -22,3 +22,19 @@ body {
     font-weight: bold;
     font-size: 9pt;
 }
+
+.container-item
+{
+    display: flex;
+}
+.title-item
+{
+    color:red;
+    margin-right: 5px;
+}
+
+.state
+{
+    margin-top: 10px;
+    margin-bottom: 100px;
+}

@@ -1,0 +1,125 @@
+<html>
+  <head>
+    <title>Canvas tutorial</title>
+    <script type="text/javascript">
+        var cant_hex = 0;
+        var piezas = [];
+        function dibujaHex([v1X, v1Y], [v2X, v2Y], [v3X, v3Y], [v4X, v4Y], [v5X, v5Y], [v6X, v6Y], color)
+        {
+            let canvas = document.getElementById("canvas");
+            let contexto = canvas.getContext("2d");
+            contexto.lineWidth = 2;
+
+            contexto.strokeStyle = "#212121";
+            contexto.fillStyle = color;
+            cant_hex++;
+            contexto.beginPath();
+            // Esquina superior izquierda
+            contexto.moveTo(v1X, v1Y);
+            // Línea recta superior
+            contexto.lineTo(v2X, v2Y);
+            // Esquina central derecha
+            contexto.lineTo(v3X, v3Y);
+            // Esquina inferior derecha
+            contexto.lineTo(v4X, v4Y);
+            // Línea recta inferior
+            contexto.lineTo(v5X, v5Y);
+            // Esquina central izquierda
+            contexto.lineTo(v6X, v6Y);
+            // Y dejamos que la última línea la dibuje JS
+            contexto.closePath();
+            // Hacemos que se dibuje
+            contexto.stroke();
+            // Lo rellenamos
+            
+            contexto.fill();
+            contexto.fillStyle = "#000"
+            contexto.fillText(cant_hex, v1X, v1Y + 30)
+
+            piezas[cant_hex] = [];
+            piezas[cant_hex][1] = [v1X, v1Y]
+            piezas[cant_hex][2] = [v2X, v2Y]
+            piezas[cant_hex][3] = [v3X, v3Y]
+            piezas[cant_hex][4] = [v4X, v4Y]
+            piezas[cant_hex][5] = [v5X, v5Y]
+            piezas[cant_hex][6] = [v6X, v6Y]
+        }
+
+    function getV1X(X, v)
+    {
+        console.log(v)
+        if(v == 1 || v == 5)
+            return X;
+
+        if(v == 2 || v == 4)
+            return X - 60;
+
+        if(v == 3)
+            return X - 90;
+        
+        return X + 30;
+    }
+
+    function getV1Y(Y, v)
+    {
+        if(v == 1 || v == 2)  return Y;
+        
+        if(v == 3 || v == 6) return Y - 50;
+        
+        return Y - 100;
+    }
+
+      function draw(){
+          let X = document.getElementById("X").value;
+          let Y= document.getElementById("Y").value;
+          let ld =  Number(document.getElementById("ladoD").value);
+          let piezaD = Number(document.getElementById("piezaD").value);
+          let v1X =0;
+          let v1Y = 0;
+          if(piezaD == 0)
+            {
+                v1X = Number(X);
+                v1Y = Number(Y);
+            }
+            else{
+
+              let ml = ld + 3;
+                if(ml > 6)
+                  ml = ml%7+1;
+
+                ld++;
+                if(ld > 6)
+                  ld = 1;
+
+                [X,Y] = piezas[piezaD][ld]
+                v1X = getV1X(Number(X), ml);
+                v1Y = getV1Y(Number(Y), ml);
+            }
+
+          
+          console.log(v1X + " " + v1Y);
+          let v2X = v1X + 60;
+          let v2Y = v1Y;
+          let color = document.getElementById("color").value
+        dibujaHex([v1X, v1Y], [v2X,v2Y], [v2X+30,50+v2Y], [v2X, v2Y+100], [v1X, v1Y+100], [v1X-30, v1Y+50], color)
+      }
+      
+    </script>
+    <style type="text/css">
+      canvas { border: 1px solid black; }
+    </style>
+  </head>
+  <body onload="">
+  <label for="">X</label>
+  <input type="number" step="1" id="X">
+  <label for="">Y</label>
+  <input type="number" step="1" id="Y">
+  <label for="">Pieza destino</label>
+  <input type="number" step="1" min="0" id="piezaD">
+  <label for="">Lado</label>
+  <input type="number" step="1" min="1" id="ladoD">
+  <input type="color" name="" id="color">
+  <input type="button" value="pintar" onclick="draw()">
+    <canvas id="canvas" width="1500" height="1000"></canvas>
+  </body>
+</html>

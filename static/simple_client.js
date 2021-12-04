@@ -5,7 +5,121 @@
 // Called by <body onload="renderPage();">
 async function renderPage() {
     document.getElementById('query_form').addEventListener('submit', handleSubmit);
+    document.getElementById('jugar_form').addEventListener('submit', jugarSubmit);
     document.getElementById('result').style.display = 'none';
+
+    updateState();
+}
+
+function parsearLista(q)
+{
+    let result = {};
+    q = q.substring(1, q.length - 1);
+    q = q.split(']');
+    
+    for(let i = 0; i < q.length - 1; i++)
+    {
+        let lado = q[i].substring((i==0)?1:2, q[i].length);
+        let array = lado.split(',');
+        result[array[0]] = [array[1], array[2]];
+    }
+
+    return result
+}
+
+async function pintarPieza(pieza, jugador2, pieza2, cara2)
+{
+    let jugador = "blancas";
+    await fetchFromServer('/json', {query: "turno(X)."},
+                          query_result => (jugador = query_result.vars[0].value));
+    
+    jugador = (jugador == "blancas")? "negras": "blancas";
+    let q = "";
+    await fetchFromServer('/json', {query: `findall([Cara, X, Y], arista(${jugador}, ${pieza}, Cara, X, Y), P).`},
+                          query_result => (q = query_result.vars[3].value));
+    
+    
+    let coordenadas = parsearLista(q);
+    draw(pieza, jugador, jugador2, cara2, pieza2, coordenadas)
+}
+
+async function jugarSubmit(event)
+{
+    event.preventDefault();
+
+    let pieza = document.getElementById('pieza');
+    let pieza2 = document.getElementById('pieza2');
+    let jugador = document.getElementById("jugador");
+    let cara = document.getElementById("cara");
+    let q = "";
+
+    if(jugador.value && jugador.value != "")
+         q = `agregarFicha(${pieza.value} , ${jugador.value} , ${pieza2.value}, ${cara.value} ).`;
+    else
+        q = `agregarFicha(${pieza.value}).`;
+
+    let result = 0;
+    await fetchFromServer('/json', {query: q},
+                          query_result => result = query_result)
+
+    if(result.success && result.success!="error")
+    {
+        pintarPieza(pieza.value, jugador.value, pieza2.value, cara.value);
+        await updateState()
+    }
+    document.getElementById("true_orFalse").innerHTML = result.success;
+    
+}
+
+function separarArray(array)
+{
+   return array = array.substring(1, array.length - 1).split(',');
+}
+
+async function turno()
+{
+    let turno = document.getElementById('turno');
+    await fetchFromServer('/json', {query: "turno(X)."},
+                          query_result => turno.innerHTML = query_result.vars[0].value);
+}
+
+async function piezasBlancasSinJugar()
+{
+    let div = document.getElementById("piezasBlancasSinJugar");
+    await fetchFromServer('/json', {query: "findall(X, piezasSinJugar(blancas,X), P)."},
+                          query_result => div.innerHTML = separarArray(query_result.vars[1].value));
+
+}
+async function piezasBlancasJugadas()
+{
+    let div = document.getElementById("piezasBlancasJugadas");
+    await fetchFromServer('/json', {query: "findall(X, piezasJugadas(blancas,X), P)."},
+                          query_result => div.innerHTML = separarArray(query_result.vars[1].value));
+
+}
+async function piezasNegrasSinJugar()
+{
+    let div = document.getElementById("piezasNegrasSinJugar");
+    await fetchFromServer('/json', {query: "findall(X, piezasSinJugar(negras,X), P)."},
+                          query_result => div.innerHTML = separarArray(query_result.vars[1].value));
+
+}
+async function piezasNegrasJugadas()
+{
+    let div = document.getElementById("piezasNegrasJugadas");
+    await fetchFromServer('/json', {query: "findall(X, piezasJugadas(negras,X), P)."},
+                          query_result => div.innerHTML = separarArray(query_result.vars[1].value));
+
+}
+
+async function updateState()
+{
+    await turno();
+    await piezasBlancasSinJugar();
+    await piezasBlancasJugadas();
+    await piezasNegrasSinJugar();
+    await piezasNegrasJugadas();
+    
 }
 
 // Handler for form's "Send query" button
@@ -15,6 +129,7 @@ async function handleSubmit(event) {
     let text = document.getElementById('query');
     await fetchFromServer('/json', {query: text.value},
                           query_result => displayQueryResult(query_result));
+    await updateState()
 }
 
 // Send a request to the server and schedule a callback.
@@ -43,6 +158,7 @@ async function fetchFromServer(path, request, callback) {
 
 // Callback from fetchFromServer for handleSubmit
 function displayQueryResult(query_result) {
+    console.log(query_result)
     document.getElementById('result').style.display = 'block';
     document.getElementById('result:query').innerHTML = '<code>' + sanitizeText(query_result.query) + '</code>';
     document.getElementById('result:success').innerHTML = '<i>' + query_result.success.toString() + '</i>';
@@ -53,7 +169,8 @@ function displayQueryResult(query_result) {
     if (query_result.success === true) {
         let table = document.createElement('table');
         table.setAttribute('class', 'vars_table');
-        for (const one_var of query_result.vars) {
+        
+        for (var one_var of query_result.vars) {
             var row = table.insertRow();
             row.vAlign = 'top';
             var td1 = row.insertCell();

@@ -89,6 +89,15 @@ http:location(json, root(json), []).
 % documented but can be found by using
 % thread_httpd:current_server(Port, _Goal, Thread, _Queue, _Scheme, _StartTime).
 % See also: https://www.swi-prolog.org/pldoc/man?section=httpunixdaemon
+
+
+%miiioasjdoiasjdoiasjdjasdoaisjd
+:- import(proyecto).
+:- [proyecto].
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+
 simple_server_main :-
     simple_server_impl,
     debug(log, 'Starting REPL ...', []),
