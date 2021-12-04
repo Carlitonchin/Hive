@@ -1,5 +1,9 @@
         
-        
+        function Pieza()
+        {
+          this.coordenadas = {};
+          this.conexiones = {};
+        }
 
         var piezas = {};
         piezas["blancas"] = {};
@@ -31,8 +35,11 @@
             // Hacemos que se dibuje
             contexto.stroke();
             // Lo rellenamos
-            
             contexto.fill();
+
+            contexto.fillStyle = "yellow";
+            contexto.fillRect(v1X, v1Y, 60, 100);
+            
             contexto.fillStyle = "red"
             contexto.fillText(pieza, v1X + 15, v1Y + 50)
             contexto.fillText(coordenadas[1], v1X+20, v1Y + 10);
@@ -42,13 +49,14 @@
             contexto.fillText(coordenadas[5], v5X - 20, v5Y -35);
             contexto.fillText(coordenadas[6], v6X+20, v6Y-20);
 
-            piezas[jugador][pieza] = [];
-            piezas[jugador][pieza][1] = [v1X, v1Y]
-            piezas[jugador][pieza][2] = [v2X, v2Y]
-            piezas[jugador][pieza][3] = [v3X, v3Y]
-            piezas[jugador][pieza][4] = [v4X, v4Y]
-            piezas[jugador][pieza][5] = [v5X, v5Y]
-            piezas[jugador][pieza][6] = [v6X, v6Y]
+            piezas[jugador][pieza] = new Pieza();
+            piezas[jugador][pieza].coordenadas[1] = [v1X, v1Y]
+            piezas[jugador][pieza].coordenadas[2] = [v2X, v2Y]
+            piezas[jugador][pieza].coordenadas[3] = [v3X, v3Y]
+            piezas[jugador][pieza].coordenadas[4] = [v4X, v4Y]
+            piezas[jugador][pieza].coordenadas[5] = [v5X, v5Y]
+            piezas[jugador][pieza].coordenadas[6] = [v6X, v6Y]
+            return piezas[jugador][pieza];
         }
 
     function getV1X(X, v)
@@ -93,7 +101,7 @@
                 if(cara2 > 6)
                   cara2 = 1;
 
-                [X,Y] = piezas[jugador2][pieza2][cara2]
+                [X,Y] = piezas[jugador2][pieza2].coordenadas[cara2]
                 console.log(X, Y);
                 console.log(ml)
                 v1X = getV1X(X, ml);
@@ -103,5 +111,7 @@
           
           let v2X = v1X + 60;
           let v2Y = v1Y;
-        dibujaHex([v1X, v1Y], [v2X,v2Y], [v2X+30,50+v2Y], [v2X, v2Y+100], [v1X, v1Y+100], [v1X-30, v1Y+50], jugador, pieza, coordenadas)
+        let piezaDibujada = dibujaHex([v1X, v1Y], [v2X,v2Y], [v2X+30,50+v2Y], [v2X, v2Y+100], [v1X, v1Y+100], [v1X-30, v1Y+50], jugador, pieza, coordenadas)
+        piezaDibujada.conexiones[ml] = piezas[jugador2][pieza2];
+        piezas[jugador2][pieza2].conexiones[cara2] = piezaDibujada;
       }
