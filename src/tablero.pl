@@ -33,7 +33,8 @@ creaConexiones(Pieza1, [X,Y|R]):-
     turno(Jugador1),
     (arista(Jugador2,Pieza2,Cara2,X,Y),
     sumaCircular6(Cara2,3,Cara1),
-    assert(conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2)));
+    assert(conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2)),
+    assert(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)));
     creaConexiones(Pieza1, R),
     !.
     
