@@ -3,7 +3,7 @@
 :- [estado, utiles].
 
 
-:- dynamic arista/5, conexion/6.
+:- dynamic arista/5, conexion/6, visitado/2.
 
 
 arista(Jugador, Pieza, Cara, X, Y):-
@@ -37,6 +37,19 @@ creaConexiones(Pieza1, [X,Y|R]):-
     assert(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)));
     creaConexiones(Pieza1, R),
     !.
+
+eliminaConexiones(Pieza1):-
+    turno(Jugador1),
+    findall([Cara1,Jugador2,Pieza2,Cara2], conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2), X),
+    eliminaConexiones(Pieza1, Jugador1, X),
+    !.
+
+eliminaConexiones(Pieza1, Jugador1, []).
+eliminaConexiones(Pieza1, Jugador1, [[Cara1,Jugador2,Pieza2,Cara2]|R]):-
+    retract(conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2)),
+    retract(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)),
+    eliminaConexiones(Pieza1, Jugador1, R).
+
     
 creaAristas(Pieza, [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     turno(Jugador),
@@ -47,6 +60,14 @@ creaAristas(Pieza, [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     assert(arista(Jugador, Pieza, 5, X5, Y5)),
     assert(arista(Jugador, Pieza, 6, X6, Y6)).
 
+eliminaAristas(Pieza,[X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
+    turno(Jugador),
+    retract(arista(Jugador, Pieza, 2, X2, Y2)),
+    retract(arista(Jugador, Pieza, 3, X3, Y3)),
+    retract(arista(Jugador, Pieza, 4, X4, Y4)),
+    retract(arista(Jugador, Pieza, 1, X1, Y1)),
+    retract(arista(Jugador, Pieza, 5, X5, Y5)),
+    retract(arista(Jugador, Pieza, 6, X6, Y6)).
 
 coordenadaCaras(CaraAConectar, X, Y, R):-
     CaraAConectar is 1,
@@ -145,4 +166,17 @@ coordenadaCaras(CaraAConectar, X, Y, R):-
     R = [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6],
     !.
 
+
+visitado(Pieza, Jugador) :- fail.
+
+grafoDesconectado(Pieza, Jugador):-
+    not(dfs(Pieza, Jugador)),
+    piezasJugadas(J,  P),
+    not(visitado(P, J)).
+
+dfs(Pieza, Jugador):-
+    not(visitado(Pieza, Jugador)),
+    assert(visitado(Pieza, Jugador)),
+    conexion(Jugador,Pieza,Cara1,Jugador2,Pieza2,Cara2),
+    dfs(Pieza2, Jugador2).
 

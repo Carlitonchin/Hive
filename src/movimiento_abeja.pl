@@ -12,7 +12,7 @@ mover(abeja,Ficha,Jugador,Cara):-
     intentaMoverHasta(abeja,X,Y,4);
     intentaMoverHasta(abeja,X,Y,5);
     intentaMoverHasta(abeja,X,Y,6)).
-
+    
     % comprobar que no se desconecte el grafo
     % quitarla y ponerla en la otra casilla
     
