@@ -1,4 +1,4 @@
-:- module(utiles, [incrementoCircular6/2, decrementoCircular6/2]).
+:- module(utiles, [incrementoCircular6/2, decrementoCircular6/2, sumaCircular6/3]).
 
 incrementoCircular6(X, Retorno):-
     sumaCircular6(X,1,Retorno).

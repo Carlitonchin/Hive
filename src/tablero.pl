@@ -1,16 +1,17 @@
 :- import(estado).
-:- [estado].
+:- import(utiles).
+:- [estado, utiles].
 
 
-:- dynamic arista/5, conexion/4.
+:- dynamic arista/5, conexion/6.
 
 
 arista(Jugador, Pieza, Cara, X, Y):-
     fail.
-conexion(Jugador1,Pieza1,Jugador2,Pieza2):-
+conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2):-
     fail.
 
-conectar(Pieza1, Jugador2, Pieza2, Cara2):-
+conectarNueva(Pieza1, Jugador2, Pieza2, Cara2):-
     arista(Jugador2, Pieza2, Cara2, X, Y),
     coordenadaCaras(Cara2, X, Y, R),
     not(encimaDePieza(R)),
@@ -18,24 +19,33 @@ conectar(Pieza1, Jugador2, Pieza2, Cara2):-
     creaConexiones(Pieza1, R),
     creaAristas(Pieza1, R).
 
-creaConexiones(Pieza, []).
-creaConexiones(Pieza1, [X,Y|R]):-
-    turno(Jugador1),
-    (arista(Jugador2,Pieza2,_,X,Y),
-    assert(conexion(Jugador1,Pieza1,Jugador2,Pieza2)));
-    creaConexiones(Pieza1, R),
-    !.
-    
-
-conexionesConRival([X,Y|R]):-
-    rival(Rival),
-    (arista(Rival,A,B,X,Y) ; conexionesConRival(R)).
-    
 encimaDePieza([X1,Y1,X2,Y2|R]):-
     arista(Jugador, Pieza, 1, X1, Y1),
     arista(Jugador, Pieza, 2, X2, Y2),
     !.
+
+conexionesConRival([X,Y|R]):-
+    rival(Rival),
+    (arista(Rival,A,B,X,Y) ; conexionesConRival(R)).
+
+creaConexiones(Pieza, []).
+creaConexiones(Pieza1, [X,Y|R]):-
+    turno(Jugador1),
+    (arista(Jugador2,Pieza2,Cara2,X,Y),
+    sumaCircular6(Cara2,3,Cara1),
+    assert(conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2)));
+    creaConexiones(Pieza1, R),
+    !.
     
+creaAristas(Pieza, [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
+    turno(Jugador),
+    assert(arista(Jugador, Pieza, 1, X1, Y1)),
+    assert(arista(Jugador, Pieza, 2, X2, Y2)),
+    assert(arista(Jugador, Pieza, 3, X3, Y3)),
+    assert(arista(Jugador, Pieza, 4, X4, Y4)),
+    assert(arista(Jugador, Pieza, 5, X5, Y5)),
+    assert(arista(Jugador, Pieza, 6, X6, Y6)).
+
 
 coordenadaCaras(CaraAConectar, X, Y, R):-
     CaraAConectar is 1,
@@ -134,12 +144,4 @@ coordenadaCaras(CaraAConectar, X, Y, R):-
     R = [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6],
     !.
 
-creaAristas(Pieza, [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
-    turno(Jugador),
-    assert(arista(Jugador, Pieza, 1, X1, Y1)),
-    assert(arista(Jugador, Pieza, 2, X2, Y2)),
-    assert(arista(Jugador, Pieza, 3, X3, Y3)),
-    assert(arista(Jugador, Pieza, 4, X4, Y4)),
-    assert(arista(Jugador, Pieza, 5, X5, Y5)),
-    assert(arista(Jugador, Pieza, 6, X6, Y6)).
 

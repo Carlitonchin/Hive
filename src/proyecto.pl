@@ -1,7 +1,7 @@
 :- import(utiles).
 :- import(estado).
-:- import(movimiento).
-:- [utiles, estado, movimiento].
+:- import(tablero).
+:- [utiles, estado, tablero].
 
 cambioDeTurno :-
     turno(blancas),
@@ -27,7 +27,7 @@ agregarFicha(Pieza1, Jugador2, Pieza2, Cara2):-
     turno(Jugador1),
     not(piezasJugadas(Jugador1, Pieza1)),
     not(faltaAbeja4(Jugador1,Pieza1)),
-    conectar(Pieza1, Jugador2, Pieza2, Cara2),
+    conectarNueva(Pieza1, Jugador2, Pieza2, Cara2),
     assert(piezasJugadas(Jugador1,Pieza1)),
     retract(piezasSinJugar(Jugador1,Pieza1)),
     cambioDeTurno,
