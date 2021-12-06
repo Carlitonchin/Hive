@@ -1,12 +1,7 @@
 :- module(utiles, [incrementoCircular6/2, decrementoCircular6/2]).
 
 incrementoCircular6(X, Retorno):-
-    Inc is X + 1,
-    Inc is 7,
-    !,
-    Retorno is 1.
-incrementoCircular6(X, Retorno):-
-    Retorno is X + 1.
+    sumaCircular6(X,1,Retorno).
 
 decrementoCircular6(X, Retorno):-
     Dec is X - 1,
@@ -15,3 +10,15 @@ decrementoCircular6(X, Retorno):-
     Retorno is 6.
 decrementoCircular6(X, Retorno):-
     Retorno is X - 1.
+
+sumaCircular6(S1, S2, Retorno):-
+    S3 is S1+S2,
+    mod7sin0(S3, Retorno).
+
+mod7sin0(X,R):-
+    X =< 6,
+    R is X,
+    !.
+mod7sin0(X,R):-
+    X1 is X - 6,
+    mod7sin0(X1, R).
