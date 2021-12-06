@@ -41,3 +41,11 @@ faltaAbeja4(Jugador,Pieza):-
     not(Pieza = abeja),
     !.
 
+prueba:-
+    prueba2,
+    X is 4.
+
+prueba2:-
+    X is 4,
+    Y is 5,
+    !.

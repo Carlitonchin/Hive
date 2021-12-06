@@ -27,3 +27,4 @@ pertenece(X,Y,[]):-
     fail.
 pertenece(X,Y,[X1,Y1|R]):-
     (X is X1 , Y is Y1) ; pertenece(X,Y,R).
+

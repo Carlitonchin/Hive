@@ -3,12 +3,16 @@
 :- [estado, utiles].
 
 
-:- dynamic arista/5, conexion/6, visitado/2.
+:- dynamic arista/5, conexion/6, visitado/2, papeleraConexiones/6, papeleraAristas/5.
 
 
 arista(Jugador, Pieza, Cara, X, Y):-
     fail.
+papeleraAristas(Jugador, Pieza, Cara, X, Y):-
+    fail.
 conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2):-
+    fail.
+papeleraConexiones(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2):-
     fail.
 
 conectarNueva(Pieza1, Jugador2, Pieza2, Cara2):-
@@ -18,6 +22,13 @@ conectarNueva(Pieza1, Jugador2, Pieza2, Cara2):-
     (not(conexionesConRival(R)) ; cantPiezasJugadas(negras,0)),
     creaConexiones(Pieza1, R),
     creaAristas(Pieza1, R).
+
+conectarTrasMovimiento(Pieza1, Jugador2, Pieza2, Cara2):-
+    arista(Jugador2, Pieza2, Cara2, X, Y),
+    coordenadaCaras(Cara2, X, Y, R),
+    creaConexiones(Pieza1, R),
+    creaAristas(Pieza1, R).
+
 
 encimaDePieza([X1,Y1,X2,Y2|R]):-
     arista(Jugador, Pieza, 1, X1, Y1),
@@ -34,9 +45,9 @@ creaConexiones(Pieza1, [X,Y|R]):-
     (arista(Jugador2,Pieza2,Cara2,X,Y),
     sumaCircular6(Cara2,3,Cara1),
     assert(conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2)),
-    assert(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)));
-    creaConexiones(Pieza1, R),
-    !.
+    assert(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)),
+    creaConexiones(Pieza1, R));
+    creaConexiones(Pieza1, R).
 
 eliminaConexiones(Pieza1):-
     turno(Jugador1),
@@ -46,10 +57,23 @@ eliminaConexiones(Pieza1):-
 
 eliminaConexiones(Pieza1, Jugador1, []).
 eliminaConexiones(Pieza1, Jugador1, [[Cara1,Jugador2,Pieza2,Cara2]|R]):-
+    assert(papeleraConexiones(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2)),
     retract(conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2)),
+    assert(papeleraConexiones(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)),
     retract(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)),
     eliminaConexiones(Pieza1, Jugador1, R).
 
+eliminaConexionesPermanente(Pieza1):-
+    turno(Jugador1),
+    findall([Cara1,Jugador2,Pieza2,Cara2], conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2), X),
+    eliminaConexionesPermanente(Pieza1, Jugador1, X),
+    !.
+
+eliminaConexionesPermanente(Pieza1, Jugador1, []).
+eliminaConexionesPermanente(Pieza1, Jugador1, [[Cara1,Jugador2,Pieza2,Cara2]|R]):-
+    retract(conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2)),
+    retract(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)),
+    eliminaConexionesPermanente(Pieza1, Jugador1, R).
     
 creaAristas(Pieza, [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     turno(Jugador),
@@ -62,12 +86,28 @@ creaAristas(Pieza, [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
 
 eliminaAristas(Pieza,[X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     turno(Jugador),
+    retract(arista(Jugador, Pieza, 1, X1, Y1)),
     retract(arista(Jugador, Pieza, 2, X2, Y2)),
     retract(arista(Jugador, Pieza, 3, X3, Y3)),
     retract(arista(Jugador, Pieza, 4, X4, Y4)),
+    retract(arista(Jugador, Pieza, 5, X5, Y5)),
+    retract(arista(Jugador, Pieza, 6, X6, Y6)),
+    assert(papeleraAristas(Jugador, Pieza, 1, X1, Y1)),
+    assert(papeleraAristas(Jugador, Pieza, 2, X2, Y2)),
+    assert(papeleraAristas(Jugador, Pieza, 3, X3, Y3)),
+    assert(papeleraAristas(Jugador, Pieza, 4, X4, Y4)),
+    assert(papeleraAristas(Jugador, Pieza, 5, X5, Y5)),
+    assert(papeleraAristas(Jugador, Pieza, 6, X6, Y6)).
+
+eliminaAristasPermanente(Pieza,[X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
+    turno(Jugador),
     retract(arista(Jugador, Pieza, 1, X1, Y1)),
+    retract(arista(Jugador, Pieza, 2, X2, Y2)),
+    retract(arista(Jugador, Pieza, 3, X3, Y3)),
+    retract(arista(Jugador, Pieza, 4, X4, Y4)),
     retract(arista(Jugador, Pieza, 5, X5, Y5)),
     retract(arista(Jugador, Pieza, 6, X6, Y6)).
+
 
 coordenadaCaras(CaraAConectar, X, Y, R):-
     CaraAConectar is 1,
@@ -170,13 +210,21 @@ coordenadaCaras(CaraAConectar, X, Y, R):-
 visitado(Pieza, Jugador) :- fail.
 
 grafoDesconectado(Pieza, Jugador):-
-    not(dfs(Pieza, Jugador)),
-    piezasJugadas(J,  P),
-    not(visitado(P, J)).
+    (not(dfs(Pieza, Jugador)),
+    retractall(visitado(_,_)));
+    (retractall(visitado(_,_)), fail)
+    .
+    
+    
 
 dfs(Pieza, Jugador):-
+    todosVisitados;(
     not(visitado(Pieza, Jugador)),
     assert(visitado(Pieza, Jugador)),
     conexion(Jugador,Pieza,Cara1,Jugador2,Pieza2,Cara2),
-    dfs(Pieza2, Jugador2).
+    dfs(Pieza2, Jugador2)
+).
+    
+todosVisitados:-
+    not((piezasJugadas(Jugador, Pieza), not(visitado(Pieza,Jugador)))).
 
