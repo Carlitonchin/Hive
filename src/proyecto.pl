@@ -1,7 +1,8 @@
 :- import(utiles).
 :- import(estado).
 :- import(tablero).
-:- [utiles, estado, tablero].
+:- import(movimiento).
+:- [utiles, estado, tablero, movimiento].
 
 cambioDeTurno :-
     turno(blancas),
