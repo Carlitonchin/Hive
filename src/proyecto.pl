@@ -41,11 +41,13 @@ faltaAbeja4(Jugador,Pieza):-
     not(Pieza = abeja),
     !.
 
-prueba:-
-    prueba2,
-    X is 4.
+factorial(0).
+factorial(X):-
+    Y is X - 1,
+    write_ln(Y),
+    !,
+    factorial(Y).
 
-prueba2:-
-    X is 4,
-    Y is 5,
-    !.
+
+    
+

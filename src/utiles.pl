@@ -1,4 +1,4 @@
-:- module(utiles, [incrementoCircular6/2, decrementoCircular6/2, sumaCircular6/3, pertenece/3]).
+:- module(utiles, [incrementoCircular6/2, decrementoCircular6/2, sumaCircular6/3, pertenece/3, pertenece/2]).
 
 incrementoCircular6(X, Retorno):-
     sumaCircular6(X,1,Retorno).
@@ -28,3 +28,6 @@ pertenece(X,Y,[]):-
 pertenece(X,Y,[X1,Y1|R]):-
     (X is X1 , Y is Y1) ; pertenece(X,Y,R).
 
+
+pertenece(X,[X1|R]):-
+    X = X1 ; pertenece(X,R).

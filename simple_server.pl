@@ -92,8 +92,8 @@ http:location(json, root(json), []).
 
 
 %miiioasjdoiasjdoiasjdjasdoaisjd
-:- import(src/proyecto).
-:- [src/proyecto].
+:- import('src/proyecto').
+:- ['src/proyecto'].
 
 
 %%%%%%%%%%%%%%%%%%%%%%

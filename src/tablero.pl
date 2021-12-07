@@ -3,8 +3,10 @@
 :- [estado, utiles].
 
 
-:- dynamic arista/5, conexion/6, visitado/2, papeleraConexiones/6, papeleraAristas/5.
+:- dynamic arista/5, conexion/6, visitado/2, papeleraConexiones/6, papeleraAristas/5, camino/1.
 
+camino(L):-
+    fail.
 
 arista(Jugador, Pieza, Cara, X, Y):-
     fail.
@@ -14,6 +16,15 @@ conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2):-
     fail.
 papeleraConexiones(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2):-
     fail.
+
+aristasDeLaPieza(Jugador, Pieza, R):-
+    arista(Jugador,Pieza,1,X1,Y1),
+    arista(Jugador,Pieza,2,X2,Y2),
+    arista(Jugador,Pieza,3,X3,Y3),
+    arista(Jugador,Pieza,4,X4,Y4),
+    arista(Jugador,Pieza,5,X5,Y5),
+    arista(Jugador,Pieza,6,X6,Y6),
+    R = [X1, Y1, X2, Y2, X3, Y3, X4, Y4, X5, Y5, X6, Y6].
 
 conectarNueva(Pieza1, Jugador2, Pieza2, Cara2):-
     arista(Jugador2, Pieza2, Cara2, X, Y),
@@ -228,3 +239,25 @@ dfs(Pieza, Jugador):-
 todosVisitados:-
     not((piezasJugadas(Jugador, Pieza), not(visitado(Pieza,Jugador)))).
 
+caminoValido(Pieza, []) :-
+    turno(Jugador),
+    eliminaConexionesPermanente(Pieza),
+    aristasDeLaPieza(Jugador, Pieza, Aristas),
+    eliminaAristasPermanente(Pieza, Aristas).
+
+caminoValido(Pieza, [Coordenadas | R]):-
+    turno(Jugador),
+    eliminaConexionesPermanente(Pieza),
+    aristasDeLaPieza(Jugador, Pieza, Aristas),
+    eliminaAristasPermanente(Pieza, Aristas),
+    creaConexiones(Pieza, Coordenadas),
+    creaAristas(Pieza, Coordenadas),
+    !,
+    not(grafoDesconectado(Pieza, Jugador)),
+    caminoValido(Pieza, R).
+
+casillaSolitaria([]).
+casillaSolitaria([X,Y | R]):-
+    not(arista(J, F, C, X, Y)),
+    casillaSolitaria(R).
+    
