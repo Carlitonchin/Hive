@@ -23,9 +23,9 @@ moverHormiga(Hormiga, Ficha, Jugador, Cara):-
 moverPorCara(Hormiga, Direccion, X, Y):-
     turno(Jugador1),
     camino([Casilla|R]),
-    casillaLibreNoCerrada(Casilla, Direccion, CasillaDestino),
-    not(pertenece(CasillaDestino, [Casilla|R])),
-    not(casillaSolitaria(CasillaDestino)),
+    casillaLibreNoCerrada(Casilla, Direccion, CasillaDestino),!,
+    not(pertenece(CasillaDestino, [Casilla|R])),!,
+    not(casillaSolitaria(CasillaDestino)),!,
     retractall(camino(_)),
     assert(camino([CasillaDestino,Casilla|R])),
     ((pertenece(X,Y,CasillaDestino),
