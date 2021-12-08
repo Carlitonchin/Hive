@@ -15,7 +15,7 @@ moverSaltamontes(Saltamontes,Ficha,Jugador,Cara):-
     aristasDeLaPieza(JugadorActual, Saltamontes, AristasSaltamontes),
     eliminaAristas(Saltamontes, AristasSaltamontes),
     eliminaConexiones(Saltamontes),
-    conectarNueva(Saltamontes,Jugador, Ficha, Cara),!,
+    conectarTrasMovimiento(Saltamontes,Jugador, Ficha, Cara),!,
 
     ((not(grafoDesconectado(Saltamontes,Jugador1)) , vaciarPapeleras) ;
     (eliminaConexionesPermanente(Saltamontes),

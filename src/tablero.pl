@@ -240,7 +240,6 @@ todosVisitados:-
     not((piezasJugadas(Jugador, Pieza), not(visitado(Pieza,Jugador)))).
 
 caminoValido(Pieza, []) :-
-    writeln('#### CAMINO VALIDO CASO BASE ####'),
     turno(Jugador),
     eliminaConexionesPermanente(Pieza),
     aristasDeLaPieza(Jugador, Pieza, Aristas),
@@ -248,10 +247,6 @@ caminoValido(Pieza, []) :-
 
 caminoValido(Pieza, [Coordenadas | R]):-
     turno(Jugador),
-
-    writeln('#### COMPROBANDO CAMINO VALIDO ####'),
-
-    
     eliminaConexionesPermanente(Pieza),
     aristasDeLaPieza(Jugador, Pieza, Aristas),
     eliminaAristasPermanente(Pieza, Aristas),
