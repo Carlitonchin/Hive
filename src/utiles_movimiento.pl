@@ -6,8 +6,6 @@
 
 
 casillaLibreNoCerrada(L, Direccion, CasillaDestino):-
-    write_ln(L),
-    write_ln(Direccion),
     coordenadasDeArista(L,Direccion,X,Y),
     coordenadaCaras(Direccion,X,Y,Casilla),
     
@@ -41,12 +39,19 @@ casillaVacia(Pieza,Jugador,Direccion):-
     not((arista(J,P,A,X1,Y1), arista(J,P,B,X2,Y2))). % que las 2 aristas no pertenezcan a una misma ficha
 
 restablecerPapeleras:-
-    findall([Jugador,Pieza,Cara,X,Y], papeleraAristas(Jugador,Pieza,Cara,X,Y), A),
-    reestableceAristas(A),
-    findall([Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2], papeleraConexiones(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2), B),
-    reestableceConexiones(B),
+    reestablecerPapelerasSinVaciarlas,
     vaciarPapeleras.
     
+reestablecerPapelerasSinVaciarlas:-
+    write('1'),
+    findall([Jugador,Pieza,Cara,X,Y], papeleraAristas(Jugador,Pieza,Cara,X,Y), A),
+    write('2'),
+    reestableceAristas(A),
+    write('3'),
+    findall([Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2], papeleraConexiones(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2), B),
+    write('4'),
+    reestableceConexiones(B),
+    write('5').
 
 reestableceAristas([]).
 reestableceAristas([[Jugador,Pieza,Cara,X,Y]|R]):-

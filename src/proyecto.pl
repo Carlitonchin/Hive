@@ -41,7 +41,9 @@ faltaAbeja4(Jugador,Pieza):-
     not(Pieza = abeja),
     !.
 
-factorial(0).
+factorial(0):-
+    trace,
+    write('kk').
 factorial(X):-
     Y is X - 1,
     write_ln(Y),

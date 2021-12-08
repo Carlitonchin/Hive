@@ -240,6 +240,7 @@ todosVisitados:-
     not((piezasJugadas(Jugador, Pieza), not(visitado(Pieza,Jugador)))).
 
 caminoValido(Pieza, []) :-
+    writeln('#### CAMINO VALIDO CASO BASE ####'),
     turno(Jugador),
     eliminaConexionesPermanente(Pieza),
     aristasDeLaPieza(Jugador, Pieza, Aristas),
@@ -247,6 +248,10 @@ caminoValido(Pieza, []) :-
 
 caminoValido(Pieza, [Coordenadas | R]):-
     turno(Jugador),
+
+    writeln('#### COMPROBANDO CAMINO VALIDO ####'),
+
+    
     eliminaConexionesPermanente(Pieza),
     aristasDeLaPieza(Jugador, Pieza, Aristas),
     eliminaAristasPermanente(Pieza, Aristas),
@@ -255,6 +260,9 @@ caminoValido(Pieza, [Coordenadas | R]):-
     !,
     not(grafoDesconectado(Pieza, Jugador)),
     caminoValido(Pieza, R).
+
+    % findall([J1,P1,C1,J2,P2,C2], conexion(J1,P1,C1,J2,P2,C2), Bag),
+    % writeln(Bag).
 
 casillaSolitaria([]).
 casillaSolitaria([X,Y | R]):-
