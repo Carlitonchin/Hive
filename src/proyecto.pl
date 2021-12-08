@@ -17,6 +17,10 @@ cambioDeTurno :-
     assert(turno(blancas)),
     !.
 
+mover(MiFicha,Ficha, Jugador, Cara):-
+    mover_(MiFicha,Ficha, Jugador, Cara),
+    cambioDeTurno.
+
 agregarFicha(Pieza1):- % para la ficha inicial
     cantPiezasJugadas(blancas,0),
     assert(piezasJugadas(blancas,Pieza1)),

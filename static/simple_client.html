@@ -25,6 +25,7 @@
 
   <body onload="renderPage();">
     <noscript><h1>You need to enable JavaScript to run this app!!!</h1></noscript>
+    <div class="state-query" style="display: flex; justify-content: space-between;">
     <div class="state">
       <div class="container-item">
         <div class="title-item">Turno:</div>
@@ -46,24 +47,28 @@
       </div>
     </div>
 
+    <div class="query-container">
+      <form id="query_form">
+        <label>Query:</label><br/>
+        <input type="text" id="query" size="50"/><br/>
+        <input type="submit" value="Send query"/>
+      </form>
+  
+      <div id="result">
+        <p>
+          <table>
+            <tr valign="top"><td><b>Query:</b></td>   <td id="result:query">&nbsp;</td></tr>
+            <tr valign="top"><td><b>(after)</b></td>  <td id="result:query_after_call">&nbsp;</td></tr>
+            <tr valign="top"><td><b>Success:</b></td> <td id="result:success">&nbsp;</td></tr>
+            <tr valign="top"><td><b>Error:</b></td>   <td id="result:error">&nbsp;</td></tr>
+            <tr valign="top"><td><b>Vars:</b></td>    <td id="result:vars">&nbsp;</td></tr>
+            <tr valign="top"><td><b>Printed:</b></td> <td id="result:printed_output">&nbsp;</td></tr>
+          </table>
+      </div>
+    </div>
+  </div>
     <canvas id="canvas" width="1500" height="1000" style="border: 1px solid black;"></canvas>
 
-    <form id="query_form">
-      <label>Query:</label><br/>
-      <input type="text" id="query" size="100"/><br/>
-      <input type="submit" value="Send query"/>
-    </form>
 
-    <div id="result">
-      <p>
-        <table>
-          <tr valign="top"><td><b>Query:</b></td>   <td id="result:query">&nbsp;</td></tr>
-          <tr valign="top"><td><b>(after)</b></td>  <td id="result:query_after_call">&nbsp;</td></tr>
-          <tr valign="top"><td><b>Success:</b></td> <td id="result:success">&nbsp;</td></tr>
-          <tr valign="top"><td><b>Error:</b></td>   <td id="result:error">&nbsp;</td></tr>
-          <tr valign="top"><td><b>Vars:</b></td>    <td id="result:vars">&nbsp;</td></tr>
-          <tr valign="top"><td><b>Printed:</b></td> <td id="result:printed_output">&nbsp;</td></tr>
-        </table>
-    </div>
   </body>
 </html>
