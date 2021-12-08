@@ -156,11 +156,74 @@ async function piezasNegrasJugadas()
 
 }
 
+function parsearPizasJugadas(s)
+{
+    s = s.substring(1, s.length - 1)
+    s = s.split(']');
+    result = []
+    for(let i = 0; i < s.length - 1; i++)
+    {
+        if(i === 0)
+        {
+            result.push(s[i].substring(1, s[i].length))
+        }
+        else
+            result.push(s[i].substring(2, s[i].length))
+    }
+
+    return result;
+}
+
+async function pintarTodo(r)
+{
+    if(r.length === 0)
+        return;
+
+    let pintados = {}
+    let [pieza, jugador] = r.split(',');
+    draw(pieza, jugador);
+    let grafo = [`${pieza},${jugador}`]
+    pintados[`${pieza},${jugador}`] = true;
+    while(grafo.length > 0){
+    [pieza, jugador] = grafo.shift().split(',');
+    await fetchFromServer('/json', {query: `findall([Cara1, Jugador2, Pieza2, Cara2], conexion(${jugador},${pieza}, Cara1, Jugador2, Pieza2, Cara2), P).`},
+    async query_result => {
+        let l = parsearPizasJugadas(query_result.vars[4].value);
+        
+        l.forEach(e=>
+            {
+                
+                const [cara, jugador2, pieza2] = e.split(',');
+                if(!pintados[`${pieza2},${jugador2}`])
+                {
+                    draw(pieza2, jugador2, jugador, cara, pieza);
+                    grafo.push(`${pieza2},${jugador2}`)
+                    pintados[`${pieza2},${jugador2}`] = true;
+                }
+                
+            })
+    });
+}
+}
+
+async function pintarTodoRequest()
+{
+    piezas["blancas"] = {};
+    piezas["negras"] = {};
+    refrescarCanvas();
+    await fetchFromServer('/json', {query: "findall([X, Jugador], piezasJugadas(Jugador,X), P)."},
+                          async query_result => {
+                            let r= parsearPizasJugadas(query_result.vars[2].value)
+                            await pintarTodo( r[0], true);
+
+                          });
+}
+
 async function updateState()
 {
     await turno();
     await piezasSinJugar()
-    
+    await pintarTodoRequest();
 }
 
 // Handler for form's "Send query" button

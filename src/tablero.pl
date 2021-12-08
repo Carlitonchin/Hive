@@ -258,8 +258,10 @@ caminoValido(Pieza, [Coordenadas | R]):-
     creaConexiones(Pieza, Coordenadas),
     creaAristas(Pieza, Coordenadas),
     !,
-    not(grafoDesconectado(Pieza, Jugador)),
-    caminoValido(Pieza, R).
+    ((not(grafoDesconectado(Pieza, Jugador)),caminoValido(Pieza, R));
+    (eliminaConexionesPermanente(Pieza),
+    eliminaAristasPermanente(Pieza, Coordenadas), 
+    fail)).
 
     % findall([J1,P1,C1,J2,P2,C2], conexion(J1,P1,C1,J2,P2,C2), Bag),
     % writeln(Bag).

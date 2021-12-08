@@ -15,10 +15,11 @@ moverHormiga(Hormiga, Ficha, Jugador, Cara):-
     turno(JugadorActual),
     arista(Jugador,Ficha,Cara,X,Y),
     aristasDeLaPieza(JugadorActual, Hormiga, L),
+    retractall(camino(_)),
     assert(camino([L])),
     eliminaAristas(Hormiga, L),
     eliminaConexiones(Hormiga),
-    moverPorTodasLasCaras(Hormiga, X, Y),
+    ((moverPorTodasLasCaras(Hormiga, X, Y),
     
     writeln('Maria'),
     findall([J1,P1,C1,J2,P2,C2], conexion(J1,P1,C1,J2,P2,C2), Bag),
@@ -28,7 +29,11 @@ moverHormiga(Hormiga, Ficha, Jugador, Cara):-
     coordenadaCaras(Cara, X, Y, R),
     creaConexiones(Hormiga,R),
     creaAristas(Hormiga,R),
-    vaciarPapeleras.
+    vaciarPapeleras);
+    
+    (restablecerPapeleras,
+    fail))
+    .
 
 moverPorCara(Hormiga, Direccion, X, Y):-
     turno(Jugador1),
