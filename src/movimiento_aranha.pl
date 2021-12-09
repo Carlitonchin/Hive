@@ -24,6 +24,53 @@ guardarEstadoInicial:-
     findall([Cara1,Jugador2,Pieza2,Cara2], conexion(JugadorActual,Aranha,Cara1,Jugador2,Pieza2,Cara2), Conexiones),
     assert(posicionAranhaPremovimiento(Aristas,Conexiones)).
 
+moverComoAbeja(MiFicha,Ficha,Jugador,Cara):-
+    writeln(["Movimiento abeja: ", MiFicha,Ficha,Jugador,Cara]),
+    turno(Jugador1),
+    aristasDeLaPieza(Jugador1, MiFicha,A),
+    findall([H1,H2,H3,H4], conexion(Jugador1,MiFicha,H1,H2,H3,H4), H5),
+    writeln(["Aristas: ",A]),
+    writeln(["Conexiones: ",H5]),
+    arista(Jugador,Ficha,Cara,X,Y),
+    writeln("Aristas superado"),
+    (
+    intentaMoverHasta(MiFicha,X,Y,1);
+    intentaMoverHasta(MiFicha,X,Y,2);
+    intentaMoverHasta(MiFicha,X,Y,3);
+    intentaMoverHasta(MiFicha,X,Y,4);
+    intentaMoverHasta(MiFicha,X,Y,5);
+    intentaMoverHasta(MiFicha,X,Y,6)
+    ),
+    writeln("Intenta mover superado"),
+    eliminaConexiones(MiFicha),
+
+    writeln("eliminaconexiones superado"),
+    aristasDeLaPieza(Jugador1, MiFicha, R),
+
+    writeln("aristas de la pieza superado"),
+    eliminaAristas(MiFicha,R),
+    
+    writeln("eliminar aristas superado"),
+    conectarTrasMovimiento(MiFicha,Jugador,Ficha,Cara),
+
+    writeln("conectar superado"),
+    !,
+
+    ((not(grafoDesconectado(MiFicha,Jugador1)) ,
+    
+    writeln("grafo no desconectado superado"),
+     vaciarPapeleras) ;
+    (
+        writeln("Hola de nuevo ......................."),
+        eliminaConexionesPermanente(MiFicha),
+    aristasDeLaPieza(Jugador1, MiFicha, R2),
+    eliminaAristasPermanente(MiFicha,R2),
+    restablecerPapeleras,
+    creaConexiones(MiFicha, A),
+    creaAristas(MiFicha, A),
+    !,
+    fail)).
+
 moverAranhaRecursivo(Aranha, Ficha, Jugador, Cara, 0):-
     writeln("Caso base del llamado"),
     turno(JugadorActual),!,
@@ -58,8 +105,7 @@ moverAranhaRecursivo(Aranha, Ficha, Jugador, Cara, PasosRestantes):-
     posiblePaso(Aranha,JugadorPaso,FichaPaso,CaraPaso),
     write("Pasos restantes "), writeln(PasosRestantes),
     write("Posible paso:"), writeln([JugadorPaso,FichaPaso,CaraPaso]),
-    turno(JugadorActual),
-    creaConexionesSiNoExisten(JugadorActual, Aranha, Aristas),
+    moverComoAbeja(Aranha,FichaPaso,JugadorPaso,CaraPaso),
     aristasDeLaPieza(JugadorActual,Aranha,ZZ),
     writeln("   movio esta talla"),
     write("         Viejas aristas: "), writeln(Aristas),
@@ -88,27 +134,6 @@ caraAdyacente(Cara, Retorno):-
 caraAdyacente(Cara,Retorno):-
     decrementoCircular6(Cara,Retorno).
 
-moverComoAbeja(Aranha,Cara, FichaPaso, JugadorPaso, CaraPaso, PasosRestantes, Aristas):-
-    turno(JugadorActual),
-    moverAbeja(Aranha,FichaPaso,JugadorPaso,CaraPaso),
-    aristasDeLaPieza(JugadorActual,Aranha,ZZ),
-    writeln("   movio esta talla"),
-    write("         Viejas aristas: "), writeln(Aristas),
-    PasosDec is PasosRestantes -1,
-    (
-    moverAranhaRecursivo(Aranha, Ficha, Jugador, Cara, PasosDec);
-    (
-    writeln("   no movio ni ostias"),
-    write("         Viejas aristas: "), writeln(Aristas),
-    writeln([JugadorActual, Aranha]),
-    aristasDeLaPieza(JugadorActual,Aranha,A),
-    write("         Aristas actuales: "),writeln(A),
-    eliminaAristasPermanente(Aranha,A),
-    eliminaConexionesPermanente(Aranha),
-    creaConexiones(Aranha,Aristas),
-    creaAristas(Aranha,Aristas),!,
-    fail)
-    ).
 
 restablecerEstado(Aranha, Aristas):-
     turno(JugadorActual),
