@@ -3,31 +3,47 @@
 :- [tablero].
 :- [utiles_movimiento].
 
-moverAbeja(Ficha,Jugador,Cara):-
+moverAbeja(MiFicha,Ficha,Jugador,Cara):-
+    writeln(["Movimiento abeja: ", MiFicha,Ficha,Jugador,Cara]),
     turno(Jugador1),
-    not((Ficha = abeja , Jugador = Jugador1)),
+    aristasDeLaPieza(Jugador1, MiFicha,A),
+    findall([H1,H2,H3,H4], conexion(Jugador1,MiFicha,H1,H2,H3,H4), H5),
+    writeln(["Aristas: ",A]),
+    writeln(["Conexiones: ",H5]),
     arista(Jugador,Ficha,Cara,X,Y),
+    writeln("Aristas superado"),
+    (
+    intentaMoverHasta(MiFicha,X,Y,1);
+    intentaMoverHasta(MiFicha,X,Y,2);
+    intentaMoverHasta(MiFicha,X,Y,3);
+    intentaMoverHasta(MiFicha,X,Y,4);
+    intentaMoverHasta(MiFicha,X,Y,5);
+    intentaMoverHasta(MiFicha,X,Y,6)
+    ),
+    writeln("Intenta mover superado"),
+    eliminaConexiones(MiFicha),
 
-    (intentaMoverHasta(abeja,X,Y,1);
-    intentaMoverHasta(abeja,X,Y,2);
-    intentaMoverHasta(abeja,X,Y,3);
-    intentaMoverHasta(abeja,X,Y,4);
-    intentaMoverHasta(abeja,X,Y,5);
-    intentaMoverHasta(abeja,X,Y,6)),
+    writeln("eliminaconexiones superado"),
+    aristasDeLaPieza(Jugador1, MiFicha, R),
 
-    eliminaConexiones(abeja),
+    writeln("aristas de la pieza superado"),
+    eliminaAristas(MiFicha,R),
     
-    aristasDeLaPieza(Jugador1, abeja, R),
-    eliminaAristas(abeja,R),
-    
-    conectarTrasMovimiento(abeja,Jugador,Ficha,Cara),
+    writeln("eliminar aristas superado"),
+    conectarTrasMovimiento(MiFicha,Jugador,Ficha,Cara),
 
+    writeln("conectar superado"),
     !,
 
-    ((not(grafoDesconectado(abeja,Jugador1)) , vaciarPapeleras) ;
-    (eliminaConexionesPermanente(abeja),
-    aristasDeLaPieza(Jugador1, abeja, R2),
-    eliminaAristasPermanente(abeja,R2),
+    ((not(grafoDesconectado(MiFicha,Jugador1)) ,
+    
+    writeln("grafo no desconectado superado"),
+     vaciarPapeleras) ;
+    (
+        writeln("Hola de nuevo ......................."),
+        eliminaConexionesPermanente(MiFicha),
+    aristasDeLaPieza(Jugador1, MiFicha, R2),
+    eliminaAristasPermanente(MiFicha,R2),
     restablecerPapeleras,
     !,
     fail)).
@@ -37,9 +53,9 @@ moverAbeja(Ficha,Jugador,Cara):-
     % quitarla y ponerla en la otra casilla
 
 
-intentaMoverHasta(abeja,X,Y,Direccion):-
+intentaMoverHasta(Pieza,X,Y,Direccion):-
     turno(Jugador),
 
-    casillaLibreNoCerrada(abeja,Jugador,Direccion, CasillaDestino),
+    casillaLibreNoCerrada(Pieza,Jugador,Direccion, CasillaDestino),
     pertenece(X,Y,CasillaDestino),
     !.

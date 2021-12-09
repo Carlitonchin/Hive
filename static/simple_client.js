@@ -7,7 +7,8 @@ async function renderPage() {
     document.getElementById('query_form').addEventListener('submit', handleSubmit);
     document.getElementById('jugar_form').addEventListener('submit', jugarSubmit);
     document.getElementById('result').style.display = 'none';
-    document.getElementById('canvas').addEventListener("click", clickBorde)
+    //document.getElementById('canvas').addEventListener("click", clickBorde)
+    document.getElementById('canvas').addEventListener("click", clickCanvas)
     updateState();
 }
 
@@ -25,6 +26,24 @@ function parsearLista(q)
     }
 
     return result
+}
+
+async function moverPieza(pieza, jugador2, pieza2, cara2)
+{
+    let result = '';
+    console.log(pieza, jugador2, pieza2, cara2);
+    await fetchFromServer('/json', {query: `mover(${pieza}, ${pieza2}, ${jugador2}, ${cara2})`},
+                          query_result => result = query_result);
+
+    if(result.success && result.success!="error")
+        await updateState()
+    else
+    {
+        refrescarCanvas()
+    }
+    document.getElementById("true_orFalse").innerHTML = result.success;
+    document.getElementById("canvas").removeEventListener("click", clickMoverPieza);
+
 }
 
 async function pintarPieza(pieza, jugador2, pieza2, cara2)
@@ -61,12 +80,15 @@ async function ponerPieza(jugador, pieza, cara)
         refrescarCanvas();
     }
     document.getElementById("true_orFalse").innerHTML = result.success;
+    
+    document.getElementById("canvas").removeEventListener("click", clickAgregarPieza);
 }
 
 async function jugarSubmit(event)
 {
     event.preventDefault();
     refrescarCanvas();
+    document.getElementById("canvas").addEventListener("click", clickAgregarPieza)
     let select = document.getElementById('piezasSinJugar');
     
    /* let pieza2 = document.getElementById('pieza2');
@@ -221,6 +243,7 @@ async function pintarTodoRequest()
 
 async function updateState()
 {
+    refrescarCanvas();
     await turno();
     await piezasSinJugar()
     await pintarTodoRequest();

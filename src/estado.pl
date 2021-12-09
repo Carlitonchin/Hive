@@ -27,6 +27,8 @@ piezasSinJugar(blancas, mosquito).
 piezasSinJugar(blancas, saltamontes1).
 piezasSinJugar(blancas, saltamontes2).
 piezasSinJugar(blancas, saltamontes3).
+piezasSinJugar(blancas, aranha1).
+piezasSinJugar(blancas, aranha2).
 
 piezasSinJugar(negras, hormiga1).
 piezasSinJugar(negras, hormiga2).
@@ -38,6 +40,8 @@ piezasSinJugar(negras, mosquito).
 piezasSinJugar(negras, saltamontes1).
 piezasSinJugar(negras, saltamontes2).
 piezasSinJugar(negras, saltamontes3).
+piezasSinJugar(negras, aranha1).
+piezasSinJugar(negras, aranha2).
 
 piezasJugadas(Jugador, Pieza) :- fail.
 

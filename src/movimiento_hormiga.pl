@@ -53,7 +53,6 @@ moverPorCara(Hormiga, Direccion, X, Y):-
 moverPorTodasLasCaras(Hormiga, X, Y):-
     (camino(Camino),
     guardarCamino(Camino),
-    len(Camino,L1),
     moverPorCara(Hormiga, 1, X, Y),
     !
     );
@@ -62,7 +61,6 @@ moverPorTodasLasCaras(Hormiga, X, Y):-
     retractall(camino(_)),
     caminoAnterior(Camino),
     assert(camino(Camino)),
-    len(Camino,L2),
     moverPorCara(Hormiga, 2, X, Y),
     !
     );
@@ -71,7 +69,6 @@ moverPorTodasLasCaras(Hormiga, X, Y):-
     retractall(camino(_)),
     caminoAnterior(Camino),
     assert(camino(Camino)),
-    len(Camino,L3),
     moverPorCara(Hormiga, 3, X, Y),
     !
     );
@@ -80,7 +77,6 @@ moverPorTodasLasCaras(Hormiga, X, Y):-
     retractall(camino(_)),
     caminoAnterior(Camino),
     assert(camino(Camino)),
-    len(Camino,L4),
     moverPorCara(Hormiga, 4, X, Y),
     !
     );
@@ -89,7 +85,6 @@ moverPorTodasLasCaras(Hormiga, X, Y):-
     retractall(camino(_)),
     caminoAnterior(Camino),
     assert(camino(Camino)),
-    len(Camino,L5),
     moverPorCara(Hormiga, 5, X, Y),
     !
     );
@@ -98,7 +93,6 @@ moverPorTodasLasCaras(Hormiga, X, Y):-
     retractall(camino(_)),
     caminoAnterior(Camino),
     assert(camino(Camino)),
-    len(Camino,L6),
     moverPorCara(Hormiga, 6, X, Y),
     !
     ).
