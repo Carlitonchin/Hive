@@ -55,16 +55,11 @@ guardarConexionesEnPapelera(Jugador1, Pieza1):-
 moverAranhaRecursivo(Aranha, Ficha, Jugador, Cara, PasosRestantes):-
     turno(JugadorActual),
     aristasDeLaPieza(JugadorActual, Aranha, Aristas),
-    
-    guardarAristasEnPapelera(JugadorActual, Aranha, Aristas),
-    writeln("Se guardaron las aristas"),
-    guardarConexionesEnPapelera(JugadorActual, Aranha),
-    writeln("Se guardaron las conexiones"),
     posiblePaso(Aranha,JugadorPaso,FichaPaso,CaraPaso),
     write("Pasos restantes "), writeln(PasosRestantes),
     write("Posible paso:"), writeln([JugadorPaso,FichaPaso,CaraPaso]),
     turno(JugadorActual),
-    moverAbeja(Aranha,FichaPaso,JugadorPaso,CaraPaso),
+    creaConexionesSiNoExisten(JugadorActual, Aranha, Aristas),
     aristasDeLaPieza(JugadorActual,Aranha,ZZ),
     writeln("   movio esta talla"),
     write("         Viejas aristas: "), writeln(Aristas),
@@ -73,6 +68,12 @@ moverAranhaRecursivo(Aranha, Ficha, Jugador, Cara, PasosRestantes):-
     
     %restablecerEstado(Aranha, Aristas)
     
+creaConexionesSiNoExisten(Jugador, Pieza, Aristas):-
+    (not(aristasDeLaPieza(Jugador, Pieza,A)),
+    creaConexiones(Pieza, Aristas),
+    creaAristas(Pieza, Aristas));
+    !.
+
 
 posiblePaso(Aranha,Jugador,Ficha,Cara):-
     turno(JugadorActual),
