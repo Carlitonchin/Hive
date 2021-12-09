@@ -154,22 +154,22 @@ function pintaLugaresVacios(jugador, p)
 
 }
 
-function pintaTodosLosLugaresVacios()
+function pintaTodosLosLugaresVacios(piezaActual, turno)
 {
     
     ["blancas", "negras"].forEach(jugador=>
         {
             Object.keys(piezas[jugador]).forEach(pieza=>
                 {
+                    if(!piezaActual || piezaActual != pieza || turno != jugador)
                     pintaLugaresVacios(jugador, pieza);
                 });
         });
 
     let canvas = document.getElementById("canvas");
-    canvas.addEventListener("click", clickBorde)
 }
 
-function clickBorde(event)
+function clickAgregarPieza(event)
 {
     let canvas = document.getElementById("canvas");
     let left = canvas.offsetLeft + canvas.clientLeft;
@@ -187,19 +187,41 @@ function clickBorde(event)
     return false;
 }
 
-function clickCanvas(event)
+function clickMoverPieza(event)
+{
+    let canvas = document.getElementById("canvas");
+    let left = canvas.offsetLeft + canvas.clientLeft;
+    let top = canvas.offsetTop;
+    let x = event.layerX - left;
+    let y = event.layerY - top;
+    let result = piezaConEstasCoordenadas(bordes, x, y);
+    if(result)
+    {
+        let [jugador, pieza, index] = result;
+        let cara = bordes[jugador][pieza][index].lado;
+        return moverPieza(piezaActual, jugador, pieza, cara);
+    }
+
+    return false;
+}
+
+async function clickCanvas(event)
 {
   let canvas = document.getElementById("canvas");
+  canvas.addEventListener("click", clickMoverPieza);
   let left = canvas.offsetLeft + canvas.clientLeft;
   let top = canvas.offsetTop;
   let x = event.layerX - left;
   let y = event.layerY - top;
-  
+  let turno = "";
+  await fetchFromServer('/json', {query: "turno(X)."},
+                          query_result => (turno = query_result.vars[0].value));
   let result = piezaConEstasCoordenadas(piezas, x, y);
   if(result)
   {
     let [jugador, pieza, _] = result;
-    pintaLugaresVacios(jugador, pieza)
+    piezaActual = pieza;
+    pintaTodosLosLugaresVacios(piezaActual, turno);
   }
  
   
