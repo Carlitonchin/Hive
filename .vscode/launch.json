@@ -11,9 +11,9 @@
             "runtimeExecutable": "/usr/bin/swipl",
             "runtimeArgs": [],
             "env": {},
-            "program": "${file}",
-            "cwd": "${fileDirname}",
-            "startupQuery": "start",
+            "program": "proyecto.pl",
+            "cwd": "/home/alab/Projects/PrologProjects/Hive/src",
+            "startupQuery": "programa",
             "stopOnEntry": true,
             "traceCmds": {
                 "continue": [

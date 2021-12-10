@@ -54,6 +54,12 @@ factorial(X):-
     !,
     factorial(Y).
 
+programa:-
+    agregarFicha(hormiga1),
+    agregarFicha(hormiga1, blancas, hormiga1, 2),
+    agregarFicha(hormiga2, blancas, hormiga1, 5),
+    agregarFicha(hormiga2, negras, hormiga1, 3),
+    mover(hormiga1, hormiga1, negras, 6),
+    write(finito).
 
-    
 
