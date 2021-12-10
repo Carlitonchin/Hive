@@ -87,5 +87,38 @@ programa:-
 
     mover(escarabajo1,abeja, negras,1).
 
+programa2:-
+    agregarFicha(escarabajo1),
+    agregarFicha(hormiga1, blancas, escarabajo1, 2),
 
+    agregarFicha(hormiga2, blancas, escarabajo1, 4),
+    agregarFicha(abeja, negras, hormiga1, 3),
 
+    spy(restauraEstadoAnterior),
+    mover(escarabajo1, hormiga1, negras, 5).
+    % mover(hormiga2, hormiga1, negras, 4),
+    % agregarFicha(saltamontes1, negras, abeja, 2),
+
+    % mover(escarabajo1,hormiga1,negras,5),
+    % agregarFicha(hormiga2,negras,saltamontes1,3),
+
+programa3:-
+    agregarFicha(escarabajo1),
+    agregarFicha(hormiga1, blancas, escarabajo1, 2),
+
+    agregarFicha(hormiga2, blancas, escarabajo1, 4),
+    agregarFicha(abeja, negras, hormiga1, 3).
+
+programa4:-
+    agregarFicha(escarabajo1),
+    agregarFicha(hormiga1, blancas, escarabajo1, 2),
+
+    agregarFicha(hormiga1, blancas, escarabajo1, 4),
+    agregarFicha(abeja, negras, hormiga1, 3),
+
+    mover(hormiga1,hormiga1,negras,4),
+    agregarFicha(saltamontes1, negras, hormiga1, 1),
+
+    subirEscarabajo(escarabajo1,hormiga1,negras,5).
+    % spy(moverEscarabajo/4),
+    % mover(escarabajo1,c1,c2,2).

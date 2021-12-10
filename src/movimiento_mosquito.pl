@@ -5,9 +5,10 @@
 :- import(movimiento_hormiga).
 :- import(movimiento_aranha).
 :- import(movimiento_saltamontes).
+:- import(movimiento_escarabajo).
 
 
-:- [utiles_movimiento, tablero, utiles, movimiento_abeja, movimiento_hormiga, movimiento_aranha, movimiento_saltamontes].
+:- [utiles_movimiento, tablero, utiles, movimiento_abeja, movimiento_hormiga, movimiento_aranha, movimiento_saltamontes, movimiento_escarabajo].
 
 moverMosquito(mosquito, Pieza, Jugador, Cara):-
     turno(JugadorActual),
@@ -30,6 +31,11 @@ moverComoAdyacente(mosquito, PiezaAdyacente,Ficha, Jugador, Cara):-
         (PiezaAdyacente = aranha1;
          PiezaAdyacente = aranha2),!,
         moverAranha(mosquito, Ficha, Jugador, Cara)
+    );
+    (
+        (PiezaAdyacente = escarabajo1;
+         PiezaAdyacente = escarabajo2),!,
+        moverEscarabajo(mosquito, Ficha, Jugador, Cara)
     );
     (
         (   PiezaAdyacente = saltamontes1;

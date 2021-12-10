@@ -10,12 +10,11 @@
 
 moverEscarabajo(Escarabajo, Ficha, Jugador, Cara):-
     % esta cara es la comparte Ficha con el Escarabajo
-    moverEscarabajoInterno(Escarabajo, Ficha, Jugador, Cara),
+    (moverEscarabajoInterno(Escarabajo, Ficha, Jugador, Cara); (vaciaEstadoAnterior,!,fail)),
     !,
     vaciaEstadoAnterior.
 
-
-moverEscarabajoInterno(Escarabajo, Ficha, Jugador, Cara):-
+subirEscarabajo(Escarabajo,Ficha,Jugador,Cara):-
     turno(JugadorActual),
     sumaCircular6(Cara,3,Direccion),
     conexion(JugadorActual,Escarabajo,Direccion,Jugador,Ficha,Cara),
@@ -24,29 +23,37 @@ moverEscarabajoInterno(Escarabajo, Ficha, Jugador, Cara):-
     eliminaAristas_(JugadorActual,Escarabajo), % por si no habia pieza debajo
     eliminaConexiones(JugadorActual,Escarabajo), 
     apresaPiezaDebajo(Escarabajo, Ficha, Jugador, Cara),
-    (not(grafoDesconectado(Escarabajo, JugadorActual)) ; (restauraEstadoAnterior,fail)).
+    (not(grafoDesconectado(Escarabajo, JugadorActual)) ; (restauraEstadoAnterior,vaciaEstadoAnterior,!,fail)),
+    vaciaEstadoAnterior,!.
 
-moverEscarabajoInterno(Escarabajo, Ficha, Jugador, Cara):-
+
+moverEscarabajoInterno(Escarabajo, _, _, Cara):-
     turno(JugadorActual),
-    aristasDeLaPieza(JugadorActual,Escarabajo,Aristas1),
-    arista(Jugador,Ficha,Cara,X,Y),
-    coordenadaCaras(Cara,X,Y,Aristas2),
-    encontrarCaraComun(Escarabajo,Aristas1,Aristas2,Cara1),
-    casillaLibreNoCerrada(Aristas1,Cara1,_),
+    arista(JugadorActual,Escarabajo,Cara,X,Y),
+    coordenadaCaras(Cara,X,Y,AristasDestino),
+
+    ((debajoDeEscarabajos(_,_,JugadorActual,Escarabajo), !,
+    casillaVacia(Escarabajo,JugadorActual,Cara))
+    ;
+    casillaLibreNoCerrada(Escarabajo,JugadorActual,Cara,AristasDestino)
+    ),
+    % casillaLibreNoCerrada(Aristas1,Cara1,_),
 
     (liberaPiezaDebajo(Escarabajo); true),
     eliminaAristas_(JugadorActual,Escarabajo), % por si no habia pieza debajo
     eliminaConexiones(JugadorActual,Escarabajo), 
 
-    creaConexiones(Escarabajo, Aristas2),
-    creaAristas(Pieza, Aristas2),
+    creaConexiones(Escarabajo, AristasDestino),
+    %no se guardan en la papelera esas conexiones !!!!!!!!!!!!
+    creaAristas(Escarabajo, AristasDestino),
 
     (not(grafoDesconectado(Escarabajo, JugadorActual))
     ; 
     ((eliminaConexionesPermanente(Escarabajo);true),
     (eliminaAristasPermanente(Escarabajo);true),
     restauraEstadoAnterior,
-    fail)).
+    !,
+    fail)),!.
 
 liberaPiezaDebajo(Escarabajo):-
     turno(JugadorActual),
@@ -107,7 +114,7 @@ restauraEstadoAnterior:-
     findall([J,P,C,X,Y],aristasParaEliminar(J,P,C,X,Y),AristasParaEliminar),
     findall([J1,P1,C1,J2,P2,C2], conexionesParaEliminar(J1,P1,C1,J2,P2,C2),ConexionesParaEliminar),
     eliminaAristasPermanenteEstas(AristasParaEliminar),
-    eliminaAristasPermanenteEstas(ConexionesParaEliminar),
+    eliminaConexionesPermanenteEstas(ConexionesParaEliminar),
 
     ((debajoDeEscarabajosEliminado(J3,P3,J4,P4),
     assert(debajoDeEscarabajos(J3,P3,J4,P4)),

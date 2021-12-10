@@ -57,7 +57,7 @@ creaConexiones(Pieza1, [X,Y|R]):-
     sumaCircular6(Cara2,3,Cara1),
     assert(conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2)),
     assert(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)),
-    creaConexiones(Pieza1, R));
+    creaConexiones(Pieza1, R),!);
     creaConexiones(Pieza1, R).
 
 eliminaConexiones(Pieza):-
@@ -91,7 +91,7 @@ eliminaConexionesPermanente(Pieza1, Jugador1, [[Cara1,Jugador2,Pieza2,Cara2]|R])
     eliminaConexionesPermanente(Pieza1, Jugador1, R).
 
 eliminaConexionesPermanenteEstas([]).
-eliminaConexionesPermanenteEstas([J1,P1,C1,J2,P2,C2|R]):-
+eliminaConexionesPermanenteEstas([[J1,P1,C1,J2,P2,C2]|R]):-
     retract(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)),
     eliminaConexionesPermanenteEstas(R).
 
@@ -155,7 +155,7 @@ eliminaAristasPermanente(Pieza,[X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     retract(arista(Jugador, Pieza, 6, X6, Y6)).
 
 eliminaAristasPermanenteEstas([]).
-eliminaAristasPermanenteEstas([J,P,C,X,Y|R]):-
+eliminaAristasPermanenteEstas([[J,P,C,X,Y]|R]):-
     retract(arista(J,P,C,X,Y)),
     eliminaAristasPermanenteEstas(R).
     
