@@ -43,15 +43,15 @@ restablecerPapeleras:-
     vaciarPapeleras.
     
 reestablecerPapelerasSinVaciarlas:-
-    write('1'),
+    % write('1'),
     findall([Jugador,Pieza,Cara,X,Y], papeleraAristas(Jugador,Pieza,Cara,X,Y), A),
-    write('2'),
+    % write('2'),
     reestableceAristas(A),
-    write('3'),
+    % write('3'),
     findall([Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2], papeleraConexiones(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2), B),
-    write('4'),
-    reestableceConexiones(B),
-    write('5').
+    % write('4'),
+    reestableceConexiones(B).
+    % write('5').
 
 reestableceAristas([]).
 reestableceAristas([[Jugador,Pieza,Cara,X,Y]|R]):-

@@ -110,6 +110,18 @@ eliminaAristas(Pieza,[X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     assert(papeleraAristas(Jugador, Pieza, 5, X5, Y5)),
     assert(papeleraAristas(Jugador, Pieza, 6, X6, Y6)).
 
+eliminaAristasPermanente(Pieza):-
+    turno(Jugador),
+    findall([C,X,Y],arista(Jugador,Pieza,C,X,Y),R),
+    eliminaAristasPermanente_(Jugador,Pieza,R).
+
+eliminaAristasPermanente_(Jugador,Pieza,[]).
+eliminaAristasPermanente_(Jugador,Pieza,[[C,X,Y]|R]):-
+    retract(arista(Jugador,Pieza,C,X,Y)),
+    eliminaAristasPermanente_(Jugador,Pieza,R).
+    
+    
+
 eliminaAristasPermanente(Pieza,[X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     turno(Jugador),
     retract(arista(Jugador, Pieza, 1, X1, Y1)),
@@ -241,21 +253,20 @@ todosVisitados:-
 
 caminoValido(Pieza, []) :-
     turno(Jugador),
-    eliminaConexionesPermanente(Pieza),
-    aristasDeLaPieza(Jugador, Pieza, Aristas),
-    eliminaAristasPermanente(Pieza, Aristas).
+    (eliminaConexionesPermanente(Pieza); true),
+    (eliminaAristasPermanente(Pieza); true).
 
 caminoValido(Pieza, [Coordenadas | R]):-
     turno(Jugador),
-    eliminaConexionesPermanente(Pieza),
-    aristasDeLaPieza(Jugador, Pieza, Aristas),
-    eliminaAristasPermanente(Pieza, Aristas),
+    (eliminaConexionesPermanente(Pieza); true),
+    (eliminaAristasPermanente(Pieza); true),
     creaConexiones(Pieza, Coordenadas),
     creaAristas(Pieza, Coordenadas),
     !,
     ((not(grafoDesconectado(Pieza, Jugador)),caminoValido(Pieza, R));
-    (eliminaConexionesPermanente(Pieza),
-    eliminaAristasPermanente(Pieza, Coordenadas), 
+    (
+    (eliminaConexionesPermanente(Pieza);true),
+    (eliminaAristasPermanente(Pieza);true), 
     fail)).
 
     % findall([J1,P1,C1,J2,P2,C2], conexion(J1,P1,C1,J2,P2,C2), Bag),

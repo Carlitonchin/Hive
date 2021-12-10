@@ -20,8 +20,15 @@ moverHormiga(Hormiga, Ficha, Jugador, Cara):-
     eliminaAristas(Hormiga, L),
     eliminaConexiones(Hormiga),
     ((moverPorTodasLasCaras(Hormiga, X, Y),
-    findall([J1,P1,C1,J2,P2,C2], conexion(J1,P1,C1,J2,P2,C2), Bag),
     !,
+
+    % findall([C1,J2,F2,C2], conexion(JugadorActual,Hormiga,C1,J2,F2,C2),K),
+    % findall([C,XX,YY],arista(JugadorActual,Hormiga,C,XX,YY),K1),
+    % imprimeLista(K1),
+    % imprimeLista(K),
+
+    (eliminaAristasPermanente(Hormiga); true),
+    (eliminaConexionesPermanente(Hormiga); true),
     coordenadaCaras(Cara, X, Y, R),
     creaConexiones(Hormiga,R),
     creaAristas(Hormiga,R),
@@ -34,16 +41,21 @@ moverHormiga(Hormiga, Ficha, Jugador, Cara):-
 moverPorCara(Hormiga, Direccion, X, Y):-
     turno(Jugador1),
     camino([Casilla|R]),
-    casillaLibreNoCerrada(Casilla, Direccion, CasillaDestino),!,
-    not(pertenece(CasillaDestino, [Casilla|R])),!,
-    not(casillaSolitaria(CasillaDestino)),!,
+    casillaLibreNoCerrada(Casilla, Direccion, CasillaDestino),
+    not(pertenece(CasillaDestino, [Casilla|R])),
+    not(casillaSolitaria(CasillaDestino)),
     retractall(camino(_)),
     assert(camino([CasillaDestino,Casilla|R])),
+    % len([CasillaDestino,Casilla|R],Len),
+    % findall([J1,F1,C1,J2,F2,C2], conexion(J1,F1,C1,J2,F2,C2),K),
+    % findall([J,P,C,XX,YY],arista(J,P,C,XX,YY),K1),
+    % writeln(['len: ',Len,' dir: ',Direccion]),
+    % imprimeLista(K1),
+    % imprimeLista(K),
     (
-    (pertenece(X,Y,CasillaDestino),  
-    reestablecerPapelerasSinVaciarlas,
-    caminoValido(Hormiga, [Casilla|R]),
-    !
+    (pertenece(X,Y,CasillaDestino), !, 
+    % reestablecerPapelerasSinVaciarlas,
+    caminoValido(Hormiga, [CasillaDestino, Casilla|R])
     );
     (
     moverPorTodasLasCaras(Hormiga, X, Y)
@@ -95,6 +107,11 @@ moverPorTodasLasCaras(Hormiga, X, Y):-
     assert(camino(Camino)),
     moverPorCara(Hormiga, 6, X, Y),
     !
-    ).
+    );
+
+    caminoAnterior([_|CaminoViejo]),
+    retractall(caminoAnterior(_)),
+    assert(caminoAnterior(CaminoViejo)),
+    fail.
 
 

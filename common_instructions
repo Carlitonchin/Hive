@@ -1,0 +1,5 @@
+findall([J1,F1,C1,J2,F2,C2], conexion(J1,F1,C1,J2,F2,C2),R)
+
+findall([J,P,C,X,Y],arista(J,P,C,X,Y),R)
+
+findall([J,F], piezasJugadas(J,F),R)

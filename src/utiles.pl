@@ -1,4 +1,4 @@
-:- module(utiles, [incrementoCircular6/2, decrementoCircular6/2, sumaCircular6/3, pertenece/3, pertenece/2, len/2]).
+:- module(utiles, [incrementoCircular6/2, decrementoCircular6/2, sumaCircular6/3, pertenece/3, pertenece/2, len/2, imprimeLista/1]).
 
 incrementoCircular6(X, Retorno):-
     sumaCircular6(X,1,Retorno).
@@ -37,3 +37,9 @@ len([], X):-
 len([_|R],X):-
     len(R,Y),
     X is Y + 1.
+
+imprimeLista([]):-
+    writeln('########################').
+imprimeLista([A|R]):-
+    writeln(A),
+    imprimeLista(R).
