@@ -76,9 +76,11 @@ eliminaConexiones(Pieza1, Jugador1, [[Cara1,Jugador2,Pieza2,Cara2]|R]):-
 
 eliminaConexionesPermanente(Pieza1):-
     turno(Jugador1),
-    findall([Cara1,Jugador2,Pieza2,Cara2], conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2), X),
+    eliminaConexionesPermanente(Jugador1,Pieza1).
+
+eliminaConexionesPermanente(Jugador,Pieza):-
+    findall([Cara1,Jugador2,Pieza2,Cara2], conexion(Jugador,Pieza,Cara1,Jugador2,Pieza2,Cara2), X),
     eliminaConexionesPermanente(Pieza1, Jugador1, X),
-    !.
 
 eliminaConexionesPermanente(Pieza1, Jugador1, []).
 eliminaConexionesPermanente(Pieza1, Jugador1, [[Cara1,Jugador2,Pieza2,Cara2]|R]):-
@@ -112,6 +114,9 @@ eliminaAristas(Pieza,[X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
 
 eliminaAristasPermanente(Pieza):-
     turno(Jugador),
+    eliminaAristasPermanente_(Jugador,Pieza).
+
+eliminaAristasPermanente_(Jugador,Pieza):-
     findall([C,X,Y],arista(Jugador,Pieza,C,X,Y),R),
     eliminaAristasPermanente_(Jugador,Pieza,R).
 

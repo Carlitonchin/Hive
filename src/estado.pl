@@ -1,6 +1,6 @@
-:- module(estado, [turno/1, rival/1, piezasSinJugar/2, piezasJugadas/2, cantPiezasJugadas/2, cantPiezasJugadasMas1/0]).
+:- module(estado, [turno/1, rival/1, piezasSinJugar/2, piezasJugadas/2, cantPiezasJugadas/2, cantPiezasJugadasMas1/0, debajoDeEscarabajos/4]).
 
-:- dynamic piezasSinJugar/2, turno/1, cantPiezasJugadas/2, piezasJugadas/2.
+:- dynamic piezasSinJugar/2, turno/1, cantPiezasJugadas/2, piezasJugadas/2, debajoDeEscarabajos/4.
 
 turno(blancas).
 
@@ -29,6 +29,8 @@ piezasSinJugar(blancas, saltamontes2).
 piezasSinJugar(blancas, saltamontes3).
 piezasSinJugar(blancas, aranha1).
 piezasSinJugar(blancas, aranha2).
+piezasSinJugar(blancas, escarabajo1).
+piezasSinJugar(blancas, escarabajo2).
 
 piezasSinJugar(negras, hormiga1).
 piezasSinJugar(negras, hormiga2).
@@ -42,8 +44,12 @@ piezasSinJugar(negras, saltamontes2).
 piezasSinJugar(negras, saltamontes3).
 piezasSinJugar(negras, aranha1).
 piezasSinJugar(negras, aranha2).
+piezasSinJugar(negras, escarabajo1).
+piezasSinJugar(negras, escarabajo2).
 
 piezasJugadas(Jugador, Pieza) :- fail.
+
+debajoDeEscarabajos(Jugador,Pieza,Jugador2,Escarabajo):- fail.
 
 cantPiezasJugadas(blancas, 0).
 cantPiezasJugadas(negras, 0).
