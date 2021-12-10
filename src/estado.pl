@@ -1,6 +1,9 @@
-:- module(estado, [turno/1, rival/1, piezasSinJugar/2, piezasJugadas/2, cantPiezasJugadas/2, cantPiezasJugadasMas1/0]).
+:- module(estado, [turno/1, rival/1, piezasSinJugar/2, piezasJugadas/2, cantPiezasJugadas/2, cantPiezasJugadasMas1/0, ultimaPiezaMovida/2]).
 
-:- dynamic piezasSinJugar/2, turno/1, cantPiezasJugadas/2, piezasJugadas/2.
+:- dynamic piezasSinJugar/2, turno/1, cantPiezasJugadas/2, piezasJugadas/2, ultimaPiezaMovida/2.
+
+ultimaPiezaMovida(_,_):-fail.
+
 
 turno(blancas).
 
