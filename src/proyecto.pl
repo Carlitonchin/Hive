@@ -55,12 +55,24 @@ factorial(X):-
     factorial(Y).
 
 programa:-
-    spy(moverHormiga/4),
-    agregarFicha(hormiga1),
-    agregarFicha(hormiga1, blancas, hormiga1, 2),
-    agregarFicha(hormiga2, blancas, hormiga1, 5),
-    agregarFicha(hormiga2, negras, hormiga1, 3),
-    mover(hormiga2, hormiga1, negras, 6),
-    write('AA').
+    agregarFicha(escarabajo1),
+    agregarFicha(hormiga1, blancas, escarabajo1, 2),
+
+    agregarFicha(hormiga2, blancas, escarabajo1, 5),
+    agregarFicha(abeja, negras, hormiga1, 3),
+
+    mover(hormiga2, hormiga1, negras, 4),
+    agregarFicha(saltamontes1, negras, abeja, 2),
+
+    mover(escarabajo1,hormiga1,negras,5),
+    agregarFicha(hormiga2,negras,saltamontes1,3),
+
+    % spy(moverEscarabajo/4),
+    
+    mover(escarabajo1,abeja, negras,1),
+    agregarFicha(hormiga3,negras,hormiga2,3),
+
+    mover(escarabajo1,abeja, negras,1).
+
 
 

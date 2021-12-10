@@ -60,11 +60,13 @@ creaConexiones(Pieza1, [X,Y|R]):-
     creaConexiones(Pieza1, R));
     creaConexiones(Pieza1, R).
 
-eliminaConexiones(Pieza1):-
-    turno(Jugador1),
-    findall([Cara1,Jugador2,Pieza2,Cara2], conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2), X),
-    eliminaConexiones(Pieza1, Jugador1, X),
-    !.
+eliminaConexiones(Pieza):-
+    turno(Jugador),
+    eliminaConexiones(Jugador, Pieza).
+
+eliminaConexiones(Jugador,Pieza):-
+    findall([Cara1,Jugador2,Pieza2,Cara2], conexion(Jugador,Pieza,Cara1,Jugador2,Pieza2,Cara2), X),
+    eliminaConexiones(Pieza, Jugador, X).
 
 eliminaConexiones(Pieza1, Jugador1, []).
 eliminaConexiones(Pieza1, Jugador1, [[Cara1,Jugador2,Pieza2,Cara2]|R]):-
@@ -87,6 +89,12 @@ eliminaConexionesPermanente(Pieza1, Jugador1, [[Cara1,Jugador2,Pieza2,Cara2]|R])
     retract(conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2)),
     retract(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)),
     eliminaConexionesPermanente(Pieza1, Jugador1, R).
+
+eliminaConexionesPermanenteEstas([]).
+eliminaConexionesPermanenteEstas([J1,P1,C1,J2,P2,C2|R]):-
+    retract(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)),
+    eliminaConexionesPermanenteEstas(R).
+
     
 creaAristas(Pieza, [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     turno(Jugador),
@@ -96,6 +104,16 @@ creaAristas(Pieza, [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     assert(arista(Jugador, Pieza, 4, X4, Y4)),
     assert(arista(Jugador, Pieza, 5, X5, Y5)),
     assert(arista(Jugador, Pieza, 6, X6, Y6)).
+
+eliminaAristas_(Jugador,Pieza):-
+    findall([C,X,Y],arista(Jugador,Pieza,C,X,Y),R),
+    eliminaAristas_(Jugador,Pieza,R).
+
+eliminaAristas_(Jugador,Pieza,[]).
+eliminaAristas_(Jugador,Pieza,[[C,X,Y]|R]):-
+    retract(arista(Jugador, Pieza, C, X, Y)),
+    assert(papeleraAristas(Jugador, Pieza, C, X, Y)),
+    eliminaAristas_(Jugador,Pieza,R).
 
 eliminaAristas(Pieza,[X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     turno(Jugador),
@@ -136,6 +154,11 @@ eliminaAristasPermanente(Pieza,[X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     retract(arista(Jugador, Pieza, 5, X5, Y5)),
     retract(arista(Jugador, Pieza, 6, X6, Y6)).
 
+eliminaAristasPermanenteEstas([]).
+eliminaAristasPermanenteEstas([J,P,C,X,Y|R]):-
+    retract(arista(J,P,C,X,Y)),
+    eliminaAristasPermanenteEstas(R).
+    
 
 coordenadaCaras(CaraAConectar, X, Y, R):-
     CaraAConectar is 1,
