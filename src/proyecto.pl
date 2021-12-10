@@ -18,7 +18,11 @@ cambioDeTurno :-
     !.
 
 mover(MiFicha,Ficha, Jugador, Cara):-
+    turno(JugadorActual),
     mover_(MiFicha,Ficha, Jugador, Cara),
+    ultimaPiezaMovida(JugadorActual, Ultima),
+    retract(ultimaPiezaMovida(JugadorActual, Ultima)),
+    assert(ultimaPiezaMovida(JugadorActual, MiFicha)),
     cambioDeTurno.
 
 agregarFicha(Pieza1):- % para la ficha inicial
@@ -26,6 +30,7 @@ agregarFicha(Pieza1):- % para la ficha inicial
     assert(piezasJugadas(blancas,Pieza1)),
     retract(piezasSinJugar(blancas,Pieza1)),
     creaAristas(Pieza1,[0,2,1,1,1,-1,0,-2,-1,-1,-1,1]),
+    assert(ultimaPiezaMovida(blancas, Pieza1)),
     cambioDeTurno,
     !.
 agregarFicha(Pieza1, Jugador2, Pieza2, Cara2):-
@@ -35,6 +40,14 @@ agregarFicha(Pieza1, Jugador2, Pieza2, Cara2):-
     conectarNueva(Pieza1, Jugador2, Pieza2, Cara2),
     assert(piezasJugadas(Jugador1,Pieza1)),
     retract(piezasSinJugar(Jugador1,Pieza1)),
+    (
+        (
+        ultimaPiezaMovida(Jugador1, Ultima),
+        retract(ultimaPiezaMovida(Jugador1, Ultima)),
+        assert(ultimaPiezaMovida(Jugador1, Pieza1))
+        );
+        assert(ultimaPiezaMovida(Jugador1, Pieza1))
+    ),
     cambioDeTurno,
     !.
 

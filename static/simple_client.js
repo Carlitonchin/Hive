@@ -2,13 +2,16 @@
 var piezaActual = "";
 // Simple client for running a query on the server and displaying the result
 
+var piezaModelo = undefined;
+
 // Called by <body onload="renderPage();">
 async function renderPage() {
     document.getElementById('query_form').addEventListener('submit', handleSubmit);
     document.getElementById('jugar_form').addEventListener('submit', jugarSubmit);
     document.getElementById('result').style.display = 'none';
     //document.getElementById('canvas').addEventListener("click", clickBorde)
-    document.getElementById('canvas').addEventListener("click", clickCanvas)
+    let canvas = document.getElementById('canvas')
+    canvas.addEventListener("click", clickCanvas)
     updateState();
 }
 
@@ -31,12 +34,21 @@ function parsearLista(q)
 async function moverPieza(pieza, jugador2, pieza2, cara2)
 {
     let result = '';
-    console.log(pieza, jugador2, pieza2, cara2);
     await fetchFromServer('/json', {query: `mover(${pieza}, ${pieza2}, ${jugador2}, ${cara2})`},
                           query_result => result = query_result);
 
     if(result.success && result.success!="error")
+    {
+        piezaModelo = 
+        {
+            jugador:jugador2,
+            pieza:pieza2,
+            x: piezas[jugador2][pieza2].coordenadas[1][0],
+            y: piezas[jugador2][pieza2].coordenadas[1][1]
+        }
         await updateState()
+       
+    }
     else
     {
         refrescarCanvas()
@@ -59,7 +71,17 @@ async function pintarPieza(pieza, jugador2, pieza2, cara2)
     
     
     let coordenadas = parsearLista(q);
-    draw(pieza, jugador, jugador2, cara2, pieza2, coordenadas)
+    draw(pieza, jugador, jugador2, cara2, pieza2, 400, 150)
+    if(pieza2){
+
+    piezaModelo = {
+        jugador:jugador2,
+        pieza:pieza2,
+        x: piezas[jugador2][pieza2].coordenadas[1][0],
+        y: piezas[jugador2][pieza2].coordenadas[1][1]
+    }
+
+    }
 }
 
 async function ponerPieza(jugador, pieza, cara)
@@ -116,6 +138,7 @@ async function jugarSubmit(event)
     if(result.success && result.success!="error")
     {
         pintarPieza(select.value);
+        
         await updateState()
     }
     document.getElementById("true_orFalse").innerHTML = result.success;
@@ -196,14 +219,22 @@ function parsearPizasJugadas(s)
     return result;
 }
 
-async function pintarTodo(r)
+async function pintarTodo(r, piezaModelo)
 {
-    if(r.length === 0)
-        return;
-
+    if(!r)
+    return;
+    piezas["blancas"] = {};
+    piezas["negras"] = {};
     let pintados = {}
     let [pieza, jugador] = r.split(',');
-    draw(pieza, jugador);
+    let x = 400;
+    let y = 150;
+    if(piezaModelo)
+        {
+            x = piezaModelo.x;
+            y = piezaModelo.y;
+        }
+    await draw(pieza, jugador, null, null, null, x, y);
     let grafo = [`${pieza},${jugador}`]
     pintados[`${pieza},${jugador}`] = true;
     while(grafo.length > 0){
@@ -212,42 +243,61 @@ async function pintarTodo(r)
     async query_result => {
         let l = parsearPizasJugadas(query_result.vars[4].value);
         
-        l.forEach(e=>
+        l.forEach(async e=>
             {
                 
                 const [cara, jugador2, pieza2] = e.split(',');
                 if(!pintados[`${pieza2},${jugador2}`])
                 {
-                    draw(pieza2, jugador2, jugador, cara, pieza);
+                    await draw(pieza2, jugador2, jugador, cara, pieza);
                     grafo.push(`${pieza2},${jugador2}`)
                     pintados[`${pieza2},${jugador2}`] = true;
                 }
                 
             })
     });
+
 }
+corrimiento(piezas);
 }
 
 async function pintarTodoRequest()
 {
-    piezas["blancas"] = {};
-    piezas["negras"] = {};
-    refrescarCanvas();
+    let rival = "";
+    await fetchFromServer('/json', {query: "rival(X)."},
+    async query_result => {rival = query_result.vars[0].value});
+    
     await fetchFromServer('/json', {query: "findall([X, Jugador], piezasJugadas(Jugador,X), P)."},
                           async query_result => {
                             let r= parsearPizasJugadas(query_result.vars[2].value)
-                            await pintarTodo( r[0], true);
-
+                            let pieza = "";
+                            if(!piezaModelo)
+                            {
+                                pieza = r[0]
+                            }
+                                
+                            else
+                            {
+                                pieza = piezaModelo.pieza + "," + piezaModelo.jugador;
+                            }
+                            await pintarTodo(pieza, piezaModelo);
                           });
+
+    
 }
 
 async function updateState()
 {
     refrescarCanvas();
     await turno();
-    await piezasSinJugar()
-    await pintarTodoRequest();
+    
+     await piezasSinJugar()
+    
+     await pintarTodoRequest();
+
 }
+
+
 
 // Handler for form's "Send query" button
 async function handleSubmit(event) {

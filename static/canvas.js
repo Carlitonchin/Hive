@@ -76,16 +76,15 @@
         return Y - 100;
     }
 
-      function draw(pieza, jugador, jugador2, cara2, pieza2, coordenadas){
-          
+      function draw(pieza, jugador, jugador2, cara2, pieza2, x,y){
         refrescarCanvas();
           let v1X =0;
           let v1Y = 0;
           let ml = 0;
           if(!pieza2)
             {
-                v1X = 400;
-                v1Y = 150;
+                v1X = x;
+                v1Y = y;
             }
             else{
                 cara2 = Number(cara2);
@@ -106,8 +105,8 @@
           
           let v2X = v1X + 60;
           let v2Y = v1Y;
-        let piezaDibujada = dibujaHex([v1X, v1Y], [v2X,v2Y], [v2X+30,50+v2Y], [v2X, v2Y+100], [v1X, v1Y+100], [v1X-30, v1Y+50], jugador, pieza, coordenadas)
-
+        let piezaDibujada = dibujaHex([v1X, v1Y], [v2X,v2Y], [v2X+30,50+v2Y], [v2X, v2Y+100], [v1X, v1Y+100], [v1X-30, v1Y+50], jugador, pieza)
+        console.log(piezaDibujada, jugador, pieza)
         piezas[jugador][pieza] = piezaDibujada;
         if(ml !== 0 )
         {
@@ -162,6 +161,73 @@
             return conectar(pieza1, cara1_2, pieza2.conexiones[cara2_2], nuevaCara2)
           }
       }
+
+function corrimientoY(cant)
+{
+  ["blancas", "negras"].forEach(jugador => {
+    Object.keys(piezas[jugador]).forEach(pieza=>
+      {
+        let v = piezas[jugador][pieza].coordenadas;
+        [1,2,3,4,5,6].forEach(i=>
+          {
+            piezas[jugador][pieza].coordenadas[i][1] += cant;
+          })
+      });
+  });
+}
+
+function corrimientoX(cant)
+{
+  ["blancas", "negras"].forEach(jugador => {
+    Object.keys(piezas[jugador]).forEach(pieza=>
+      {
+        let v = piezas[jugador][pieza].coordenadas;
+        [1,2,3,4,5,6].forEach(i=>
+          {
+            piezas[jugador][pieza].coordenadas[i][0] += cant;
+          })
+      });
+  });
+}
+
+function corrimiento(piezas)
+{
+  console.log(piezas["negras"]["hormiga1"].coordenadas)
+  let canvas = document.getElementById("canvas");
+  let menorX = 0;
+  let mayorX = canvas.width;
+  let menorY = 0;
+  let mayorY = canvas.height;
+  let left = canvas.offsetLeft + canvas.clientLeft;
+  let top = canvas.offsetTop;
+  ["blancas", "negras"].forEach(jugador => {
+    Object.keys(piezas[jugador]).forEach(pieza=>
+      {
+        console.log("corrimiento")
+        let v = piezas[jugador][pieza].coordenadas;
+        menorX = Math.min(v[6][0] - left - 60, menorX);
+        menorY = Math.min(v[1][1] - 60, menorY);
+        mayorX = Math.max(v[3][0] - left + 60, mayorX);
+        mayorY = Math.max(v[4][1] + 60, mayorY);
+        
+          
+      });
+  });
+
+  if(menorX < 0)
+    corrimientoX(-1*menorX);
+
+  if(mayorX > canvas.width)
+    corrimientoX(canvas.width - mayorX)
+
+    if(menorY < 0)
+    corrimientoY(-1*menorY);
+
+  if(mayorY > canvas.height)
+    corrimientoY(canvas.height - mayorY)
+
+  refrescarCanvas();
+}
 
       function refrescarCanvas()
       {
