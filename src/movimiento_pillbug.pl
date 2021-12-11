@@ -5,7 +5,7 @@
 
 :- [utiles_movimiento, tablero, utiles].
 
-daBola(Pillbug, CaraTomar, CaraDejar):-
+daBola_(Pillbug, CaraTomar, CaraDejar):-
     turno(Jugador),
     conexion(Jugador, Pillbug, CaraTomar, Jugador2, Pieza2, Cara2),
     rival(JugadorRival),
@@ -46,7 +46,8 @@ daBola(Pillbug, CaraTomar, CaraDejar):-
     eliminaBloqueosAntiguos(Jugador,TurnoActual1),
 
     assert(piezaBloqueada(Jugador2,Pieza2,TurnoBloqueado1,Jugador)),
-    assert(piezaBloqueada(Jugador2,Pieza2,TurnoBloqueado2,JugadorRival)).
+    assert(piezaBloqueada(Jugador2,Pieza2,TurnoBloqueado2,JugadorRival))
+    .
 
 
 eliminaBloqueosAntiguos(Jugador,NumeroTurnos):-

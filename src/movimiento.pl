@@ -10,6 +10,30 @@
 :- [movimiento_abeja, movimiento_hormiga, movimiento_saltamontes, movimiento_aranha, movimiento_escarabajo, movimiento_mosquito, movimiento_pillbug, movimiento_mariquita].
 
 
+intentaDarBola(Pillbug, CaraTomar, CaraDejar):-
+    turno(JugadorActual),
+    (Pillbug = bola;
+        (Pillbug = mosquito,
+        conexion(JugadorActual,Pillbug,Cara1,Jugador2,bola,Cara2)
+        )
+    ),
+    !,
+    daBola_(Pillbug, CaraTomar, CaraDejar).
+
+intentaSubirEscarabajo(Escarabajo,Ficha,Jugador,Cara):-
+    turno(JugadorActual),
+    (
+        Escarabajo = escarabajo1;
+        Escarabajo = escarabajo2;
+        (
+            Escarabajo = mosquito,
+            (
+            conexion(JugadorActual, Escarabajo, _, _, escarabajo1, _);
+            conexion(JugadorActual, Escarabajo, _, _, escarabajo2, _)
+            )
+        )
+    ),
+    subirEscarabajo(Escarabajo, Ficha, Jugador, Cara).
 
 mover_(abeja,Ficha, Jugador, Cara):-
     !,

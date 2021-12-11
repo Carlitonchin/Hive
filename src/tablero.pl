@@ -320,3 +320,35 @@ casillaSolitaria([X,Y | R]):-
     not(arista(J, F, C, X, Y)),
     casillaSolitaria(R).
     
+
+contrario(blancas, negras).
+contrario(negras, blancas).
+
+victoria(Jugador):-
+    contrario(Jugador, Rival),
+    abejaJugada(Rival),
+    abejaRodeada(Rival).
+
+abejaRodeada(Rival):-
+    (
+        (piezasJugadas(Rival, abeja),
+        Pieza = abeja,
+        Jugador = Rival
+        );
+        (
+            topeDeLaTorre(Rival, abeja, Jugador, Pieza)
+        )
+    ),
+    abejaRodeada(Pieza, Jugador).
+
+abejaRodeada(Pieza,Jugador):-
+    conexion(Jugador,Pieza,1,_,_,_),
+    conexion(Jugador,Pieza,2,_,_,_),
+    conexion(Jugador,Pieza,3,_,_,_),
+    conexion(Jugador,Pieza,4,_,_,_),
+    conexion(Jugador,Pieza,5,_,_,_),
+    conexion(Jugador,Pieza,6,_,_,_).
+
+empate:-
+    victoria(blancas),
+    victoria(negras).

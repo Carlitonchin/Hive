@@ -1,7 +1,7 @@
 
-:- module(estado, [turno/1, rival/1, piezasSinJugar/2, piezasJugadas/2, cantPiezasJugadas/2, cantPiezasJugadasMas1/0, debajoDeEscarabajos/4, cantPiezasJugadasMas1/0, ultimaPiezaMovida/2, piezaBloqueada/4]).
+:- module(estado, [turno/1, rival/1, piezasSinJugar/2, piezasJugadas/2, cantPiezasJugadas/2, cantPiezasJugadasMas1/0, debajoDeEscarabajos/4, cantPiezasJugadasMas1/0, ultimaPiezaMovida/2, piezaBloqueada/4, abejaJugada/1, topeDeLaTorre/4,juegoTerminado/1]).
 
-:- dynamic piezasSinJugar/2, turno/1, cantPiezasJugadas/2, piezasJugadas/2, debajoDeEscarabajos/4,ultimaPiezaMovida/2, piezaBloqueada/4.
+:- dynamic piezasSinJugar/2, turno/1, cantPiezasJugadas/2, piezasJugadas/2, debajoDeEscarabajos/4,ultimaPiezaMovida/2, piezaBloqueada/4, abejaJugada/1, juegoTerminado/1.
 
 
 turno(blancas).
@@ -55,6 +55,14 @@ debajoDeEscarabajos(Jugador,Pieza,Jugador2,Escarabajo):- fail.
 
 piezaBloqueada(Jugador,Pieza,NumeroTurno,JugadorDeTurno):- fail.
 
+topeDeLaTorre(Jugador1, Pieza1, JugadorR, PiezaR):-
+    (not(debajoDeEscarabajos(Jugador1, Pieza1, J, P)),
+    JugadorR = Jugador1,
+    PiezaR = Pieza1)
+    ;
+    topeDeLaTorre(J,P,JugadorR,PiezaR).
+    
+
 cantPiezasJugadas(blancas, 0).
 cantPiezasJugadas(negras, 0).
 
@@ -64,3 +72,5 @@ cantPiezasJugadasMas1 :-
     retract(cantPiezasJugadas(Jugador, Cant)),
     NewCant is Cant + 1,
     assert(cantPiezasJugadas(Jugador, NewCant)).
+
+

@@ -4,14 +4,31 @@
 :- import(movimiento).
 :- [utiles, estado, tablero, movimiento].
 
+verificarFin(Jugador):-
+    (
+        empate,
+        assert(juegoTerminado(empate))
+    );
+    (
+        victoria(blancas),
+        assert(juegoTerminado(blancas))
+    );
+    (
+        victoria(negras),
+        assert(juegoTerminado(negras))
+    );
+    !.
+
 cambioDeTurno :-
     turno(blancas),
+    verificarFin(blancas),
     cantPiezasJugadasMas1,
     retract(turno(blancas)),
     assert(turno(negras)),
     !.
 cambioDeTurno :-
     turno(negras),
+    verificarFin(negras),
     cantPiezasJugadasMas1,
     retract(turno(negras)),
     assert(turno(blancas)),
@@ -28,7 +45,9 @@ pasarTurno :-
     assert(turno(negras)).
 
 mover(MiFicha,Ficha, Jugador, Cara):-
+    not(juegoTerminado(_)),
     turno(JugadorActual),
+    abejaJugada(JugadorActual),
     cantPiezasJugadas(JugadorActual,NumeroTurno),
     not(piezaBloqueada(JugadorActual,MiFicha,NumeroTurno,JugadorActual)),
     mover_(MiFicha,Ficha, Jugador, Cara),
@@ -37,15 +56,35 @@ mover(MiFicha,Ficha, Jugador, Cara):-
     assert(ultimaPiezaMovida(JugadorActual, MiFicha)),
     cambioDeTurno.
 
+daBola(Pillbug, CaraTomar, CaraDejar):-
+    not(juegoTerminado(_)),
+    turno(JugadorActual),
+    abejaJugada(JugadorActual),
+    intentaDarBola(Pillbug, CaraTomar, CaraDejar),
+    cambioDeTurno.
+
+
+subirEscarabajo(Escarabajo,Ficha,Jugador,Cara):-
+    not(juegoTerminado(_)),
+    turno(JugadorActual),
+    abejaJugada(JugadorActual),
+    intentaSubirEscarabajo(Escarabajo,Ficha,Jugador,Cara),
+    cambioDeTurno.
+
 agregarFicha(Pieza1):- % para la ficha inicial
     cantPiezasJugadas(blancas,0),
     assert(piezasJugadas(blancas,Pieza1)),
     retract(piezasSinJugar(blancas,Pieza1)),
     creaAristas(Pieza1,[0,2,1,1,1,-1,0,-2,-1,-1,-1,1]),
     assert(ultimaPiezaMovida(blancas, Pieza1)),
-    cambioDeTurno,
+    ((Pieza1 = abeja,
+        assert(abejaJugada(blancas)),
+        cambioDeTurno
+        );
+    cambioDeTurno),
     !.
 agregarFicha(Pieza1, Jugador2, Pieza2, Cara2):-
+    not(juegoTerminado(_)),
     turno(Jugador1),
     not(piezasJugadas(Jugador1, Pieza1)),
     not(faltaAbeja4(Jugador1,Pieza1)),
@@ -60,13 +99,17 @@ agregarFicha(Pieza1, Jugador2, Pieza2, Cara2):-
         );
         assert(ultimaPiezaMovida(Jugador1, Pieza1))
     ),
-    cambioDeTurno,
+    ((Pieza1 = abeja,
+        assert(abejaJugada(Jugador1)),
+        cambioDeTurno
+        );
+    cambioDeTurno),
     !.
 
 faltaAbeja4(Jugador,Pieza):-
     cantPiezasJugadas(Jugador,N),
     N is 3,
-    not(piezasJugadas(Jugador,abeja)),
+    not(abejaJugada(Jugador)),
     not(Pieza = abeja),
     !.
 

@@ -6,9 +6,10 @@
 :- import(movimiento_aranha).
 :- import(movimiento_saltamontes).
 :- import(movimiento_escarabajo).
+:- import(movimiento_mariquita).
 
 
-:- [utiles_movimiento, tablero, utiles, movimiento_abeja, movimiento_hormiga, movimiento_aranha, movimiento_saltamontes, movimiento_escarabajo].
+:- [utiles_movimiento, tablero, utiles, movimiento_abeja, movimiento_hormiga, movimiento_aranha, movimiento_saltamontes, movimiento_escarabajo, movimiento_mariquita].
 
 moverMosquito(mosquito, Pieza, Jugador, Cara):-
     turno(JugadorActual),
@@ -56,3 +57,9 @@ moverComoAdyacente(mosquito, PiezaAdyacente,Ficha, Jugador, Cara):-
         not(debajoDeEscarabajos(Jugador,Ficha,JugadorActual,mosquito)),
         !,
         moverSaltamontes(mosquito,Ficha,Jugador,Cara).
+
+moverComoAdyacente(mosquito, bola, Ficha, Jugador, Cara):-
+    moverAbeja(mosquito, Ficha, Jugador, Cara).
+
+moverMosquito(mosquito, mariquita, Ficha, Jugador, Cara):-
+    moverMariquita(mosquito, Ficha, Jugador, Cara).
