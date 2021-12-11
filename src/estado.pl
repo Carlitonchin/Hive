@@ -33,6 +33,7 @@ piezasSinJugar(blancas, aranha1).
 piezasSinJugar(blancas, aranha2).
 piezasSinJugar(blancas, escarabajo1).
 piezasSinJugar(blancas, escarabajo2).
+piezasSinJugar(blancas, bola).
 
 piezasSinJugar(negras, hormiga1).
 piezasSinJugar(negras, hormiga2).
@@ -48,6 +49,7 @@ piezasSinJugar(negras, aranha1).
 piezasSinJugar(negras, aranha2).
 piezasSinJugar(negras, escarabajo1).
 piezasSinJugar(negras, escarabajo2).
+piezasSinJugar(negras, bola).
 
 piezasJugadas(Jugador, Pieza) :- fail.
 

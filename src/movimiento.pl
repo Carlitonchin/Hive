@@ -2,10 +2,10 @@
 :- import(movimiento_hormiga).
 :- import(movimiento_saltamontes).
 :- import(movimiento_aranha).
-
 :- import(movimiento_escarabajo).
 :- import(movimiento_mosquito).
-:- [movimiento_abeja, movimiento_hormiga, movimiento_saltamontes, movimiento_aranha, movimiento_escarabajo, movimiento_mosquito].
+:- import(movimiento_pillbug).
+:- [movimiento_abeja, movimiento_hormiga, movimiento_saltamontes, movimiento_aranha, movimiento_escarabajo, movimiento_mosquito, movimiento_pillbug].
 
 
 mover_(abeja,Ficha, Jugador, Cara):-
@@ -39,3 +39,7 @@ mover_(Escarabajo,Ficha,Jugador,Cara):-
     moverEscarabajo(Escarabajo, Ficha, Jugador, Cara).
 mover_(mosquito, Ficha, Jugador, Cara):-
     moverMosquito(mosquito, Ficha, Jugador, Cara).
+
+mover_(bola, Ficha, Jugador,Cara):-
+    !,
+    moverAbeja(bola, Ficha, Jugador, Cara).

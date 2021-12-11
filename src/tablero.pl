@@ -50,15 +50,18 @@ conexionesConRival([X,Y|R]):-
     rival(Rival),
     (arista(Rival,A,B,X,Y) ; conexionesConRival(R)).
 
-creaConexiones(Pieza, []).
-creaConexiones(Pieza1, [X,Y|R]):-
-    turno(Jugador1),
+creaConexiones(Pieza,L):-
+    turno(Jugador),
+    creaConexiones(Jugador,Pieza,L).
+
+creaConexiones(Jugador1,Pieza1, []).
+creaConexiones(Jugador1,Pieza1, [X,Y|R]):-
     (arista(Jugador2,Pieza2,Cara2,X,Y),
     sumaCircular6(Cara2,3,Cara1),
     assert(conexion(Jugador1,Pieza1,Cara1,Jugador2,Pieza2,Cara2)),
     assert(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)),
-    creaConexiones(Pieza1, R),!);
-    creaConexiones(Pieza1, R).
+    creaConexiones(Jugador1,Pieza1, R),!);
+    creaConexiones(Jugador1,Pieza1, R).
 
 eliminaConexiones(Pieza):-
     turno(Jugador),
@@ -82,7 +85,7 @@ eliminaConexionesPermanente(Pieza1):-
 
 eliminaConexionesPermanente(Jugador,Pieza):-
     findall([Cara1,Jugador2,Pieza2,Cara2], conexion(Jugador,Pieza,Cara1,Jugador2,Pieza2,Cara2), X),
-    eliminaConexionesPermanente(Pieza1, Jugador1, X),
+    eliminaConexionesPermanente(Pieza, Jugador, X).
 
 eliminaConexionesPermanente(Pieza1, Jugador1, []).
 eliminaConexionesPermanente(Pieza1, Jugador1, [[Cara1,Jugador2,Pieza2,Cara2]|R]):-
@@ -98,6 +101,9 @@ eliminaConexionesPermanenteEstas([[J1,P1,C1,J2,P2,C2]|R]):-
     
 creaAristas(Pieza, [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     turno(Jugador),
+    creaAristas(Jugador,Pieza,[X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]).
+
+creaAristas(Jugador, Pieza, [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6]):-
     assert(arista(Jugador, Pieza, 1, X1, Y1)),
     assert(arista(Jugador, Pieza, 2, X2, Y2)),
     assert(arista(Jugador, Pieza, 3, X3, Y3)),

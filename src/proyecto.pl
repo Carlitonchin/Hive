@@ -110,15 +110,18 @@ programa3:-
     agregarFicha(abeja, negras, hormiga1, 3).
 
 programa4:-
-    agregarFicha(escarabajo1),
-    agregarFicha(hormiga1, blancas, escarabajo1, 2),
+    agregarFicha(bola),!,
+    agregarFicha(hormiga1, blancas, bola, 2),!,
 
-    agregarFicha(hormiga1, blancas, escarabajo1, 4),
-    agregarFicha(abeja, negras, hormiga1, 3),
+    agregarFicha(hormiga1, blancas, bola, 4),!,
+    agregarFicha(abeja, negras, hormiga1, 3),!,
 
-    mover(hormiga1,hormiga1,negras,4),
-    agregarFicha(saltamontes1, negras, hormiga1, 1),
+    mover(hormiga1,hormiga1,negras,4),!,
+    agregarFicha(saltamontes1, negras, hormiga1, 1),!.
 
-    subirEscarabajo(escarabajo1,hormiga1,negras,5).
+    % spy(daBola/3),
+    % daBola(bola,2,5).
+
+    % subirEscarabajo(escarabajo1,hormiga1,negras,5).
     % spy(moverEscarabajo/4),
     % mover(escarabajo1,c1,c2,2).
