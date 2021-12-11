@@ -106,7 +106,6 @@
           let v2X = v1X + 60;
           let v2Y = v1Y;
         let piezaDibujada = dibujaHex([v1X, v1Y], [v2X,v2Y], [v2X+30,50+v2Y], [v2X, v2Y+100], [v1X, v1Y+100], [v1X-30, v1Y+50], jugador, pieza)
-        console.log(piezaDibujada, jugador, pieza)
         piezas[jugador][pieza] = piezaDibujada;
         if(ml !== 0 )
         {
@@ -192,7 +191,6 @@ function corrimientoX(cant)
 
 function corrimiento(piezas)
 {
-  console.log(piezas["negras"]["hormiga1"].coordenadas)
   let canvas = document.getElementById("canvas");
   let menorX = 0;
   let mayorX = canvas.width;
@@ -203,7 +201,6 @@ function corrimiento(piezas)
   ["blancas", "negras"].forEach(jugador => {
     Object.keys(piezas[jugador]).forEach(pieza=>
       {
-        console.log("corrimiento")
         let v = piezas[jugador][pieza].coordenadas;
         menorX = Math.min(v[6][0] - left - 60, menorX);
         menorY = Math.min(v[1][1] - 60, menorY);

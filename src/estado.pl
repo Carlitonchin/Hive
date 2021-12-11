@@ -23,7 +23,6 @@ piezasSinJugar(blancas, hormiga1).
 piezasSinJugar(blancas, hormiga2).
 piezasSinJugar(blancas, hormiga3).
 piezasSinJugar(blancas, abeja).
-piezasSinJugar(blancas, escarabajo).
 piezasSinJugar(blancas, mariquita).
 piezasSinJugar(blancas, mosquito).
 piezasSinJugar(blancas, saltamontes1).
@@ -38,7 +37,6 @@ piezasSinJugar(negras, hormiga1).
 piezasSinJugar(negras, hormiga2).
 piezasSinJugar(negras, hormiga3).
 piezasSinJugar(negras, abeja).
-piezasSinJugar(negras, escarabajo).
 piezasSinJugar(negras, mariquita).
 piezasSinJugar(negras, mosquito).
 piezasSinJugar(negras, saltamontes1).
