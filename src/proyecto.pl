@@ -17,6 +17,16 @@ cambioDeTurno :-
     assert(turno(blancas)),
     !.
 
+pasarTurno:-
+    turno(negras),!,
+    retract(turno(negras)),
+    assert(turno(blancas)).
+
+pasarTurno :-
+    turno(blancas),!,
+    retract(turno(blancas)),
+    assert(turno(negras)).
+
 mover(MiFicha,Ficha, Jugador, Cara):-
     turno(JugadorActual),
     mover_(MiFicha,Ficha, Jugador, Cara),

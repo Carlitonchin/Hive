@@ -12,6 +12,7 @@ async function renderPage() {
     //document.getElementById('canvas').addEventListener("click", clickBorde)
     let canvas = document.getElementById('canvas')
     canvas.addEventListener("click", clickCanvas)
+    piezaModelo = undefined;
     updateState();
 }
 
@@ -234,13 +235,14 @@ async function pintarTodo(r, piezaModelo)
             x = piezaModelo.x;
             y = piezaModelo.y;
         }
-    await draw(pieza, jugador, null, null, null, x, y);
+    console.log(pieza, jugador)
+    draw(pieza, jugador, null, null, null, x, y);
     let grafo = [`${pieza},${jugador}`]
     pintados[`${pieza},${jugador}`] = true;
     while(grafo.length > 0){
     [pieza, jugador] = grafo.shift().split(',');
     await fetchFromServer('/json', {query: `findall([Cara1, Jugador2, Pieza2, Cara2], conexion(${jugador},${pieza}, Cara1, Jugador2, Pieza2, Cara2), P).`},
-    async query_result => {
+     query_result => {
         let l = parsearPizasJugadas(query_result.vars[4].value);
         
         l.forEach(async e=>
@@ -249,9 +251,11 @@ async function pintarTodo(r, piezaModelo)
                 const [cara, jugador2, pieza2] = e.split(',');
                 if(!pintados[`${pieza2},${jugador2}`])
                 {
-                    await draw(pieza2, jugador2, jugador, cara, pieza);
+                    console.log(pieza2, jugador2)
+                    draw(pieza2, jugador2, jugador, cara, pieza);
                     grafo.push(`${pieza2},${jugador2}`)
                     pintados[`${pieza2},${jugador2}`] = true;
+                    
                 }
                 
             })
@@ -268,7 +272,7 @@ async function pintarTodoRequest()
     async query_result => {rival = query_result.vars[0].value});
     
     await fetchFromServer('/json', {query: "findall([X, Jugador], piezasJugadas(Jugador,X), P)."},
-                          async query_result => {
+                           async query_result => {
                             let r= parsearPizasJugadas(query_result.vars[2].value)
                             let pieza = "";
                             if(!piezaModelo)
@@ -280,7 +284,7 @@ async function pintarTodoRequest()
                             {
                                 pieza = piezaModelo.pieza + "," + piezaModelo.jugador;
                             }
-                            await pintarTodo(pieza, piezaModelo);
+                             await pintarTodo(pieza, piezaModelo);
                           });
 
     
