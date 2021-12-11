@@ -29,11 +29,13 @@ pasarTurno :-
 
 mover(MiFicha,Ficha, Jugador, Cara):-
     turno(JugadorActual),
-    mover_(MiFicha,Ficha, Jugador, Cara),
+    ((mover_(MiFicha,Ficha, Jugador, Cara),
     ultimaPiezaMovida(JugadorActual, Ultima),
     retract(ultimaPiezaMovida(JugadorActual, Ultima)),
     assert(ultimaPiezaMovida(JugadorActual, MiFicha)),
-    cambioDeTurno.
+    cambioDeTurno);
+    grafoDesconectado(MiFicha, JugadorActual))
+    .
 
 agregarFicha(Pieza1):- % para la ficha inicial
     cantPiezasJugadas(blancas,0),
@@ -114,10 +116,17 @@ programa2:-
 
 programa3:-
     agregarFicha(escarabajo1),
+    agregarFicha(hormiga1, blancas, escarabajo1, 5),
     agregarFicha(hormiga1, blancas, escarabajo1, 2),
-
-    agregarFicha(hormiga2, blancas, escarabajo1, 4),
-    agregarFicha(abeja, negras, hormiga1, 3).
+    agregarFicha(hormiga2, negras, hormiga1, 5),
+    (subirEscarabajo(escarabajo1,hormiga1,negras,2);
+    mover(hormiga1, escarabajo1, blancas, 1)
+    ),
+    (
+    subirEscarabajo(escarabajo1,hormiga1,negras,2);
+    agregarFicha(hormiga3, negras, hormiga2, 6)
+    ).
+%subirEscarabajo(escarabajo1,hormiga1,negras,2)
 
 programa4:-
     agregarFicha(bola),!,

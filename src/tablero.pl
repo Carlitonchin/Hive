@@ -95,7 +95,7 @@ eliminaConexionesPermanente(Pieza1, Jugador1, [[Cara1,Jugador2,Pieza2,Cara2]|R])
 
 eliminaConexionesPermanenteEstas([]).
 eliminaConexionesPermanenteEstas([[J1,P1,C1,J2,P2,C2]|R]):-
-    retract(conexion(Jugador2,Pieza2,Cara2,Jugador1,Pieza1,Cara1)),
+    retract(conexion(J1,P1,C1,J2,P2,C2)),
     eliminaConexionesPermanenteEstas(R).
 
     
