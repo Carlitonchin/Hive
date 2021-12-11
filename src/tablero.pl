@@ -260,23 +260,32 @@ coordenadaCaras(CaraAConectar, X, Y, R):-
 
 visitado(Pieza, Jugador) :- fail.
 
+unaSolaPieza(Pieza, Jugador):-
+    not((piezasJugadas(Jugador2, Pieza2),
+    (not(Jugador = Jugador2);
+    not(Pieza = Pieza2)))).
+
 grafoDesconectado(Pieza, Jugador):-
-    (not(dfs(Pieza, Jugador)),
+    (
+        not(dfs(Pieza, Jugador)),
+     !,
     retractall(visitado(_,_)));
-    (retractall(visitado(_,_)), fail)
+    (retractall(visitado(_,_)),!,
+    fail)
     .
     
     
 
 dfs(Pieza, Jugador):-
-    todosVisitados;(
+    todosVisitados(Pieza, Jugador);(
     not(visitado(Pieza, Jugador)),
     assert(visitado(Pieza, Jugador)),
     conexion(Jugador,Pieza,Cara1,Jugador2,Pieza2,Cara2),
     dfs(Pieza2, Jugador2)
 ).
     
-todosVisitados:-
+todosVisitados(P, J):-
+    unaSolaPieza(P,J),!;
     not((piezasJugadas(Jugador, Pieza), not(visitado(Pieza,Jugador)))).
 
 caminoValido(Pieza, []) :-

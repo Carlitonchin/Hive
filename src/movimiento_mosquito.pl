@@ -17,30 +17,42 @@ moverMosquito(mosquito, Pieza, Jugador, Cara):-
     moverComoAdyacente(mosquito, PiezaAdyacente,Pieza, Jugador, Cara).
 
 moverComoAdyacente(mosquito, PiezaAdyacente,Ficha, Jugador, Cara):-
-    (
-        PiezaAdyacente = abeja,!,
-        moverAbeja(mosquito,Ficha,Jugador,Cara)
-    );
-    (
-        (PiezaAdyacente = hormiga1;
-        PiezaAdyacente = hormiga2;
-        PiezaAdyacente = hormiga3),!,
-        moverHormiga(mosquito, Ficha, Jugador, Cara)
-    );
-    (
-        (PiezaAdyacente = aranha1;
-         PiezaAdyacente = aranha2),!,
-        moverAranha(mosquito, Ficha, Jugador, Cara)
-    );
-    (
+    PiezaAdyacente = abeja,
+    not(debajoDeEscarabajos(Jugador,Ficha,JugadorActual,mosquito)),
+    !,
+    moverAbeja(mosquito,Ficha,Jugador,Cara).
+
+moverComoAdyacente(mosquito, PiezaAdyacente,Ficha, Jugador, Cara):-
+    (PiezaAdyacente = hormiga1;
+    PiezaAdyacente = hormiga2;
+    PiezaAdyacente = hormiga3),
+    not(debajoDeEscarabajos(Jugador,Ficha,JugadorActual,mosquito)),
+    !,
+    moverHormiga(mosquito, Ficha, Jugador, Cara).
+    
+    
+moverComoAdyacente(mosquito, PiezaAdyacente,Ficha, Jugador, Cara):-
+    (PiezaAdyacente = aranha1;
+    PiezaAdyacente = aranha2),
+    not(debajoDeEscarabajos(Jugador,Ficha,JugadorActual,mosquito)),
+    !,
+    moverAranha(mosquito, Ficha, Jugador, Cara).
+
+
+moverComoAdyacente(mosquito, PiezaAdyacente,Ficha, Jugador, Cara):-
+        turno(JugadorActual),
         (PiezaAdyacente = escarabajo1;
-         PiezaAdyacente = escarabajo2),!,
-        moverEscarabajo(mosquito, Ficha, Jugador, Cara)
-    );
-    (
-        (   PiezaAdyacente = saltamontes1;
-            PiezaAdyacente = saltamontes1;
-            PiezaAdyacente = saltamontes1
-            ),!,
-            moverSaltamontes(mosquito,Ficha,Jugador,Cara)
-    ).
+        PiezaAdyacente = escarabajo2;
+        debajoDeEscarabajos(Jugador,Ficha,JugadorActual,mosquito)
+        ),!,
+        moverEscarabajo(mosquito, Ficha, Jugador, Cara).
+    
+
+moverComoAdyacente(mosquito, PiezaAdyacente,Ficha, Jugador, Cara):-
+        (PiezaAdyacente = saltamontes1;
+        PiezaAdyacente = saltamontes2;
+        PiezaAdyacente = saltamontes3
+        ),
+        not(debajoDeEscarabajos(Jugador,Ficha,JugadorActual,mosquito)),
+        !,
+        moverSaltamontes(mosquito,Ficha,Jugador,Cara).
