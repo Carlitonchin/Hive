@@ -32,7 +32,7 @@ moverHormiga(Hormiga, Ficha, Jugador, Cara):-
     coordenadaCaras(Cara, X, Y, R),
     creaConexiones(Hormiga,R),
     creaAristas(Hormiga,R),
-    vaciarPapeleras);
+    vaciarPapeleras,!);
     
     (restablecerPapeleras,
     fail))
