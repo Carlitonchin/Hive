@@ -16,6 +16,8 @@ moverEscarabajo(Escarabajo, Ficha, Jugador, Cara):-
 
 subirEscarabajo(Escarabajo,Ficha,Jugador,Cara):-
     turno(JugadorActual),
+    cantPiezasJugadas(JugadorActual,NumeroTurno),
+    not(piezaBloqueada(JugadorActual,Pieza,NumeroTurno,JugadorActual)), % el bicho bola no le dio bola en el turno pasado
     sumaCircular6(Cara,3,Direccion),
     conexion(JugadorActual,Escarabajo,Direccion,Jugador,Ficha,Cara),
     !,
