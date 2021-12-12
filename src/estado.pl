@@ -56,11 +56,13 @@ debajoDeEscarabajos(Jugador,Pieza,Jugador2,Escarabajo):- fail.
 piezaBloqueada(Jugador,Pieza,NumeroTurno,JugadorDeTurno):- fail.
 
 topeDeLaTorre(Jugador1, Pieza1, JugadorR, PiezaR):-
-    (not(debajoDeEscarabajos(Jugador1, Pieza1, J, P)),
+    (debajoDeEscarabajos(Jugador1, Pieza1, J, P)),
+    topeDeLaTorre(J,P,JugadorR,PiezaR);
+    (
     JugadorR = Jugador1,
-    PiezaR = Pieza1)
-    ;
-    topeDeLaTorre(J,P,JugadorR,PiezaR).
+    PiezaR = Pieza1
+    ).
+    
     
 
 cantPiezasJugadas(blancas, 0).

@@ -88,6 +88,7 @@ async function pintarPieza(pieza, jugador2, pieza2, cara2)
 async function ponerPieza(jugador, pieza, cara)
 {
     piezaActual = document.getElementById("piezasSinJugar").value;
+    console.log(piezaActual, jugador, pieza, cara)
     let q = `agregarFicha(${piezaActual} , ${jugador} , ${pieza}, ${cara} ).`;
     let result = 0;
     await fetchFromServer('/json', {query: q},
@@ -290,6 +291,20 @@ async function pintarTodoRequest()
     
 }
 
+async function fin()
+{
+    let f = document.getElementById('fin');
+    await fetchFromServer('/json', {query: "juegoTerminado(X)."},
+                          query_result =>{
+                              if(query_result.success && query_result.success != "error"){
+                              console.log(query_result)
+                            f.innerHTML = "victoria de "
+                            f.innerHTML += query_result.vars[0].value
+                        }
+
+                          } );
+}
+
 async function updateState()
 {
     refrescarCanvas();
@@ -298,7 +313,7 @@ async function updateState()
      await piezasSinJugar()
     
      await pintarTodoRequest();
-
+    await fin();
 }
 
 

@@ -338,7 +338,7 @@ abejaRodeada(Rival):-
         (
             topeDeLaTorre(Rival, abeja, Jugador, Pieza)
         )
-    ),
+    ),!,
     abejaRodeada(Pieza, Jugador).
 
 abejaRodeada(Pieza,Jugador):-

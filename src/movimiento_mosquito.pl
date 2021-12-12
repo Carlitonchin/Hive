@@ -61,5 +61,5 @@ moverComoAdyacente(mosquito, PiezaAdyacente,Ficha, Jugador, Cara):-
 moverComoAdyacente(mosquito, bola, Ficha, Jugador, Cara):-
     moverAbeja(mosquito, Ficha, Jugador, Cara).
 
-moverMosquito(mosquito, mariquita, Ficha, Jugador, Cara):-
+moverComoAdyacente(mosquito, mariquita, Ficha, Jugador, Cara):-
     moverMariquita(mosquito, Ficha, Jugador, Cara).

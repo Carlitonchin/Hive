@@ -9,7 +9,7 @@ daBola_(Pillbug, CaraTomar, CaraDejar):-
     turno(Jugador),
     conexion(Jugador, Pillbug, CaraTomar, Jugador2, Pieza2, Cara2),
     rival(JugadorRival),
-    not(ultimaPiezaMovida(JugadorRival,Pieza2)),
+    (not(ultimaPiezaMovida(JugadorRival,Pieza2));Jugador2=Jugador),
     not(debajoDeEscarabajos(_,_,Jugador2,Pieza2)),
     cantPiezasJugadas(Jugador,NumeroTurno),
     not(piezaBloqueada(Jugador2,Pieza2,NumeroTurno,Jugador)),

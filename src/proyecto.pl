@@ -64,7 +64,7 @@ daBola(Pillbug, CaraTomar, CaraDejar):-
     cambioDeTurno.
 
 
-subirEscarabajo(Escarabajo,Ficha,Jugador,Cara):-
+subeEscarabajo(Escarabajo,Ficha,Jugador,Cara):-
     not(juegoTerminado(_)),
     turno(JugadorActual),
     abejaJugada(JugadorActual),
