@@ -9,7 +9,7 @@
             contexto.lineWidth = 2;
 
             contexto.strokeStyle = "#212121";
-            contexto.fillStyle = (jugador == "blancas")?"gray":"#ff8080";
+            contexto.fillStyle = (jugador == "blancas")?"#E3E4E5":"#332F2C";
             
             contexto.beginPath();
             // Esquina superior izquierda
@@ -31,7 +31,7 @@
             // Lo rellenamos
             contexto.fill();
 
-            contexto.fillStyle = "yellow";
+            contexto.fillStyle = "#FFFF65";
             contexto.fillRect(v1X, v1Y, 60, 100);
             
             contexto.fillStyle = "red"
